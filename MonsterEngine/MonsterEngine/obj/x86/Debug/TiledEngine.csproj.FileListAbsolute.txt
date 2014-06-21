@@ -1,0 +1,21 @@
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\bin\Debug\TiledEngine.exe
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\bin\Debug\TiledEngine.pdb
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\obj\x86\Debug\TiledEngine.exe
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\obj\x86\Debug\TiledEngine.pdb
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\bin\Debug\OpenTK.dll
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\bin\Debug\OpenTK.pdb
+C:\Users\Sebastian\AppData\Local\Temporary Projects\TiledEngine\bin\Debug\OpenTK.xml
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\obj\x86\Debug\TiledEngine.exe
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\obj\x86\Debug\TiledEngine.pdb
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\bin\Debug\TiledEngine.exe
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\bin\Debug\TiledEngine.pdb
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\bin\Debug\OpenTK.dll
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\bin\Debug\OpenTK.pdb
+C:\Users\Sebastian\documents\visual studio 2010\Projects\TiledEngine\TiledEngine\bin\Debug\OpenTK.xml
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\obj\x86\Debug\TiledEngine.exe
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\obj\x86\Debug\TiledEngine.pdb
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\bin\Debug\TiledEngine.exe
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\bin\Debug\TiledEngine.pdb
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\bin\Debug\OpenTK.dll
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\bin\Debug\OpenTK.pdb
+C:\Users\Sebastian\Documents\GitHub\TiledEngine\TiledEngine\TiledEngine\bin\Debug\OpenTK.xml

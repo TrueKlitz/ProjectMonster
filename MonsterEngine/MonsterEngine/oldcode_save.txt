@@ -1,0 +1,517 @@
+﻿
+        byte[] abWorldLayer0;
+        int iWorldSize = 32;
+
+// 0 = Nichts , 1 = Normale Wand , 2 = Fenster 
+	        abWorldLayer0 = new byte[] {
+	        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	        0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,
+	        0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,2,1,1,1,1,0,
+	        0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,0,0,0,1,1,0,0,0,0,0,0,0,0,2,0,2,0,2,0,0,1,1,1,1,1,0,0,0,0,0,0,
+	        0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,1,1,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,1,1,0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,1,1,2,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,
+	        0,1,1,1,1,0,1,0,1,1,0,0,0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	        0,1,1,1,1,2,1,2,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	        0,1,1,1,1,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,
+	        0,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,0,2,0,0,2,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,
+	        0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                };
+
+float[] createSurfaceVertexIndices(int offset){
+		return new float[]{
+            0f + (offset*4), 1f + (offset*4), 2f + (offset*4),      0 + (offset*4), 2 + (offset*4), 3 + (offset*4),    // Front face
+            };
+	    }
+
+        float[] createSurfacePos(float x,float y,float z,float size,int direction, int id) {
+		    float[] lfCubeVertexPosition = new float[12];
+		    if(direction == 0){
+		    lfCubeVertexPosition = new float[] {
+			    // Front face
+                -size + x, -size + y,  size + z,
+                 size + x, -size + y,  size + z,
+                 size + x,  size + y,  size + z,
+                -size + x,  size + y,  size + z,
+            };
+            }
+		    if(direction == 1){
+		    lfCubeVertexPosition = new float[] {
+                // Back face
+                -size + x, -size + y, -size + z,
+                -size + x,  size + y, -size + z,
+                 size + x,  size + y, -size + z,
+                 size + x, -size + y, -size + z
+            };}
+            
+		    if(direction == 2){
+		    lfCubeVertexPosition = new float[] {
+			    // Top face
+                -size + x,  size + y, -size + z,
+                -size + x,  size + y,  size + z,
+                 size + x,  size + y,  size + z,
+                 size + x,  size + y, -size + z,
+            };}
+		    if(direction == 3){
+		    lfCubeVertexPosition = new float[] {
+                // Bottom face
+                -size + x, -size + y, -size + z,
+                 size + x, -size + y, -size + z,
+                 size + x, -size + y,  size + z,
+                -size + x, -size + y,  size + z,
+            };}
+		    if(direction == 4){
+		    lfCubeVertexPosition = new float[] {
+                // Right face
+                 size + x, -size + y, -size + z,
+                 size + x,  size + y, -size + z,
+                 size + x,  size + y,  size + z,
+                 size + x, -size + y,  size + z,
+            };}
+		    if(direction == 5){
+		    lfCubeVertexPosition = new float[] {
+                // Left face
+                -size + x, -size + y, -size + z,
+                -size + x, -size + y,  size + z,
+                -size + x,  size + y,  size + z,
+                -size + x,  size + y, -size + z
+            };}
+		    return lfCubeVertexPosition;
+	    }
+
+        float[] createSurfaceTexCoord(int direction,int textureID,int id){
+		    int x = textureID % 8;
+		    int y = (textureID - x) / 8;
+		    float sx = 0.125f*x;
+		    float ty = 0.125f*y;
+		    if(direction == 0){
+		    return new float[]{
+                // Front face
+                0.0f + sx		, 0.875f - ty, 
+                0.125f + sx		, 0.875f - ty, 
+                0.125f + sx 	, 1.0f - ty,	
+                0.0f + sx		, 1.0f - ty, 
+            };}		
+		    if(direction == 1){
+		    return new float[]{
+                // Back face
+			    0.0f + sx		, 0.875f - ty,
+			    0.0f + sx		, 1.0f - ty,
+			    0.125f + sx 		, 1.0f - ty,
+			    0.125f + sx		, 0.875f - ty
+            };}
+
+		    if(direction == 2){
+		    return new float[]{
+                // Top face
+                0.0f + sx		, 0.875f - ty,
+			    0.0f + sx		, 1.0f - ty,
+			    0.125f + sx 		, 1.0f - ty,
+			    0.125f + sx		, 0.875f - ty
+            };}
+			
+		    if(direction == 3){
+		    return new float[]{
+                // Bottom face
+                0.0f + sx		, 0.875f - ty, 
+                0.125f + sx		, 0.875f - ty, 
+                0.125f + sx 		, 1.0f - ty,	
+                0.0f + sx		, 1.0f - ty, 
+            };}	
+
+		    if(direction == 4){
+		    return new float[]{
+                // Right face
+			    0.125f + sx		, 0.875f - ty,
+			    0.125f + sx 		, 1.0f - ty,
+			    0.0f + sx		, 1.0f - ty,
+                0.0f + sx		, 0.875f - ty, 
+            };}	
+			
+		    if(direction == 5){
+		    return new float[]{
+                // Left face
+			    0.0f + sx		, 0.875f - ty,
+			    0.125f + sx		, 0.875f - ty,
+			    0.125f + sx 		, 1.0f - ty,
+			    0.0f + sx		, 1.0f - ty,
+            };}
+
+            return new float[]{
+                // Front face
+                0.0f + sx		, 0.875f - ty, 
+                0.125f + sx		, 0.875f - ty, 
+                0.125f + sx 	, 1.0f - ty,	
+                0.0f + sx		, 1.0f - ty, 
+            };
+
+	    }
+
+        float[] createSurfaceNormals(int direction, int offset){
+	
+		    if(direction == 0){
+		    return new float[]{
+		      // Front face
+		       0.0f,  0.0f,  -1.0f,
+		       0.0f,  0.0f,  -1.0f,
+		       0.0f,  0.0f,  -1.0f,
+		       0.0f,  0.0f,  -1.0f, };
+            }
+
+		    if(direction == 1){
+		    return new float[]{
+		      // Back face
+		       0.0f,  0.0f, -1.0f,
+		       0.0f,  0.0f, -1.0f,
+		       0.0f,  0.0f, -1.0f,
+		       0.0f,  0.0f, -1.0f, };
+            }
+
+		    if(direction == 2){
+		    return new float[]{
+		      // Top face
+		       0.0f,  1.0f,  0.0f,
+		       0.0f,  1.0f,  0.0f,
+		       0.0f,  1.0f,  0.0f,
+		       0.0f,  1.0f,  0.0f, };
+            }
+
+		    if(direction == 3){
+		    return new float[]{
+		      // Bottom face
+		       0.0f, -1.0f,  0.0f,
+		       0.0f, -1.0f,  0.0f,
+		       0.0f, -1.0f,  0.0f,
+		       0.0f, -1.0f,  0.0f, };
+            }
+
+		    if(direction == 4){
+		    return new float[]{
+		      // Right face
+		       1.0f,  0.0f,  0.0f,
+		       1.0f,  0.0f,  0.0f,
+		       1.0f,  0.0f,  0.0f,
+		       1.0f,  0.0f,  0.0f, };
+            }
+
+		    if(direction == 5){
+		    return new float[]{
+		      // Left face
+		      -1.0f,  0.0f,  0.0f,
+		      -1.0f,  0.0f,  0.0f,
+		      -1.0f,  0.0f,  0.0f,
+		      -1.0f,  0.0f,  0.0f, };
+            }
+            return new float[]{
+		      // Front face
+		       0.0f,  0.0f,  -1.0f,
+		       0.0f,  0.0f,  -1.0f,
+		       0.0f,  0.0f,  -1.0f,
+		       0.0f,  0.0f,  -1.0f, };
+	    }
+
+        int cubeVertexPositionBuffer;
+        int cubeVertexTextureCoordBuffer;
+        int cubeVertexIndexBuffer;
+        int cubeVertexNormalBuffer;
+
+        int cubeVertexPositionBufferBLEND;
+        int cubeVertexTextureCoordBufferBLEND;
+        int cubeVertexIndexBufferBLEND;
+        int cubeVertexNormalBufferBLEND;
+
+        void initBuffers() {
+	
+		    List<float> laVertexNormals = new List<float>();
+            List<float> laTextureCoords = new List<float>();
+            List<float> laCubeVertexIndices = new List<float>();
+            List<float> laVertices = new List<float>();
+
+            List<float> laVertexNormalsBLEND = new List<float>();
+            List<float> laTextureCoordsBLEND = new List<float>();
+            List<float> laCubeVertexIndicesBLEND = new List<float>();
+            List<float> laVerticesBLEND = new List<float>();
+		
+		    int iLenght = abWorldLayer0.Length;
+	
+		    int ii = 0;
+		    int iiBLEND = 0;
+		    for(var x = 0; x < Math.Sqrt(iLenght);x++){
+			    for(var y = 0; y < Math.Sqrt(iLenght);y++){
+                    if (abWorldLayer0[iWorldSize * y + x] == 1 | abWorldLayer0[iWorldSize * y + x] == 2)
+                    {
+                        laVertices.AddRange( createSurfacePos(x * 2, -3, y * 2, 1, 2/*DIRECTION*/ , ii) );
+                        laVertexNormals.AddRange(createSurfaceNormals(2/*DIRECTION*/ , ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 2/*DIRECTION*/ ,1/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+                        laVertices.AddRange(createSurfacePos(x * 2, 3, y * 2, 1, 3/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(3/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 3/*DIRECTION*/,2/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+				    if(abWorldLayer0[iWorldSize*y+x] == 1 && abWorldLayer0[iWorldSize*(y-1)+x] == 0){
+                        laVertices.AddRange(createSurfacePos(x * 2, -1, y * 2 - 2, 1, 0/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(0/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 0/*DIRECTION*/,8/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+                        laVertices.AddRange(createSurfacePos(x * 2, 1, y * 2 - 2, 1, 0/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(0/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 0/*DIRECTION*/,0/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+				    if(abWorldLayer0[iWorldSize*y+x] == 1 && abWorldLayer0[iWorldSize*(y+1)+x] == 0){
+                        laVertices.AddRange(createSurfacePos(x * 2, -1, y * 2 + 2, 1, 1/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(1/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 1/*DIRECTION*/ ,8/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+                        laVertices.AddRange(createSurfacePos(x * 2, 1, y * 2 + 2, 1, 1/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(1/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 1/*DIRECTION*/ ,0/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+				    if(abWorldLayer0[iWorldSize*y+x] == 1 && abWorldLayer0[iWorldSize*y+x-1] == 0){
+                        laVertices.AddRange(createSurfacePos(x * 2 - 2, -1, y * 2, 1, 4/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(4/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 4/*DIRECTION*/ ,8/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+                        laVertices.AddRange(createSurfacePos(x * 2 - 2, 1, y * 2, 1, 4/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(4/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 4/*DIRECTION*/ ,0/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+				    if(abWorldLayer0[iWorldSize*y+x] == 1 && abWorldLayer0[iWorldSize*y+x+1] == 0){
+                        laVertices.AddRange(createSurfacePos(x * 2 + 2, -1, y * 2, 1, 5/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(5/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 5/*DIRECTION*/,8/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+                        laVertices.AddRange(createSurfacePos(x * 2 + 2, 1, y * 2, 1, 5/*DIRECTION*/ , ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(5/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 5/*DIRECTION*/,0/*TEXTURE ID*/,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+
+				    if(abWorldLayer0[iWorldSize*y+x] == 1 && abWorldLayer0[iWorldSize*(y-1)+x] == 2){
+				
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2,-1,y*2 - 2.1f,1, 0/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(0/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 0/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2,1,y*2 - 2.1f,1, 0/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(0/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 0/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2,-1,y*2 -1.9f,1, 1/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(1/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 1/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2,1,y*2 -1.9f,1, 1/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(1/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 1/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					
+					    laVertices.AddRange(createSurfacePos(x*2 ,-1,y*2 - 2,1, 5/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(5/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 5/*DIRECTION*/,12/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+					    laVertices.AddRange(createSurfacePos(x*2 ,1,y*2 - 2,1, 5/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(5/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 5/*DIRECTION*/,4/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+					
+					    laVertices.AddRange(createSurfacePos(x*2 ,-1,y*2 - 2,1, 4/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(4/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 4/*DIRECTION*/,12/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+					    laVertices.AddRange(createSurfacePos(x*2 ,1,y*2 - 2,1, 4/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(4/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 4/*DIRECTION*/,4/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+				    if(abWorldLayer0[iWorldSize*y+x] == 1 && abWorldLayer0[iWorldSize*(y)+x+1] == 2){
+				
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2 + 1.9f,-1,y*2 ,1, 4/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(4/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 4/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2 + 1.9f,1,y*2 ,1, 4/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(4/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 4/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2 + 2.1f,-1,y*2 ,1, 5/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(5/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 5/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					    laVerticesBLEND.AddRange(createSurfacePos(x*2 + 2.1f,1,y*2 ,1, 5/*DIRECTION*/ ,iiBLEND));
+					    laVertexNormalsBLEND.AddRange(createSurfaceNormals(5/*DIRECTION*/ ,iiBLEND));
+					    laTextureCoordsBLEND.AddRange(createSurfaceTexCoord( 5/*DIRECTION*/,3/*TEXTURE ID*/ ,iiBLEND));
+					    laCubeVertexIndicesBLEND.AddRange(createSurfaceVertexIndices(iiBLEND));
+					    iiBLEND++;
+					
+					    laVertices.AddRange(createSurfacePos(x*2 + 2,-1,y*2 ,1, 1/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(1/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 1/*DIRECTION*/,12/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+					    laVertices.AddRange(createSurfacePos(x*2 + 2,1,y*2,1, 1/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(1/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 1/*DIRECTION*/,4/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+					
+					    laVertices.AddRange(createSurfacePos(x*2 + 2,-1,y*2 ,1, 0/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(0/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 0/*DIRECTION*/,12/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+					    laVertices.AddRange(createSurfacePos(x*2 + 2,1,y*2,1, 0/*DIRECTION*/ ,ii));
+					    laVertexNormals.AddRange(createSurfaceNormals(0/*DIRECTION*/ ,ii));
+					    laTextureCoords.AddRange(createSurfaceTexCoord( 0/*DIRECTION*/,4/*TEXTURE ID*/ ,ii));
+					    laCubeVertexIndices.AddRange(createSurfaceVertexIndices(ii));
+					    ii++;
+				    }
+			    }
+		    }
+		    // Normal Rendering
+		
+		    float[] vertices = laVertices.ToArray();
+            laVertices.Clear();
+
+            GL.GenBuffers(1, out cubeVertexPositionBuffer);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeVertexPositionBuffer);
+            GL.BufferData(
+                BufferTarget.ArrayBuffer,
+                (IntPtr)(vertices.Length * sizeof(float)),
+                vertices,
+                BufferUsageHint.StaticDraw);
+
+            float[] texCoords = laTextureCoords.ToArray();
+            laTextureCoords.Clear();
+
+            GL.GenBuffers(1, out cubeVertexTextureCoordBuffer);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeVertexTextureCoordBuffer);
+            GL.BufferData(
+                BufferTarget.ArrayBuffer,
+                (IntPtr)(texCoords.Length * sizeof(float)),
+                texCoords,
+                BufferUsageHint.StaticDraw);
+
+            float[] normals = laVertexNormals.ToArray();
+            laVertexNormals.Clear();
+
+            GL.GenBuffers(1, out cubeVertexTextureCoordBuffer);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeVertexNormalBuffer );
+            GL.BufferData(
+                BufferTarget.ArrayBuffer,
+                (IntPtr)(normals.Length * sizeof(float)),
+                normals,
+                BufferUsageHint.StaticDraw);
+
+            float[] indices = laCubeVertexIndices.ToArray();
+            laCubeVertexIndices.Clear();
+
+            GL.GenBuffers(1, out cubeVertexTextureCoordBuffer);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeVertexIndexBuffer);
+            GL.BufferData(
+                BufferTarget.ArrayBuffer,
+                (IntPtr)(indices.Length * sizeof(float)),
+                indices,
+                BufferUsageHint.StaticDraw);
+
+            //GL.BU cubeVertexPositionBuffer.itemSize = 3;
+            //cubeVertexPositionBuffer.numItems = 4*ii;
+		
+            /*cubeVertexTextureCoordBuffer = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeVertexTextureCoordBuffer);
+		
+            GL.bufferData(BufferTarget.ArrayBuffer, new Float32Array(laTextureCoords), GL.STATIC_DRAW);
+            cubeVertexTextureCoordBuffer.itemSize = 2;
+            cubeVertexTextureCoordBuffer.numItems = 4*ii;
+
+            cubeVertexIndexBuffer = GL.GenBuffer();
+            GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+        
+            GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(laCubeVertexIndices), GL.STATIC_DRAW);
+            cubeVertexIndexBuffer.itemSize = 1;
+            cubeVertexIndexBuffer.numItems = 6*ii;
+		
+		    cubeVertexNormalBuffer = GL.GenBuffer();
+            GL.bindBuffer(BufferTarget.ArrayBuffer, cubeVertexNormalBuffer);
+        
+            GL.bufferData(BufferTarget.ArrayBuffer, new Float32Array(laVertexNormals), GL.STATIC_DRAW);
+            cubeVertexNormalBuffer.itemSize = 3;
+            cubeVertexNormalBuffer.numItems = 4;*/
+		
+		    // Blend Rendering
+		    /*cubeVertexPositionBufferBLEND = GL.GenBuffer();
+            GL.bindBuffer(BufferTarget.ArrayBuffer, cubeVertexPositionBufferBLEND);
+		
+		    var verticesBLEND = laVerticesBLEND;
+            GL.bufferData(BufferTarget.ArrayBuffer, new Float32Array(verticesBLEND), GL.STATIC_DRAW);
+            cubeVertexPositionBufferBLEND.itemSize = 3;
+            cubeVertexPositionBufferBLEND.numItems = 4*iiBLEND;
+		
+            cubeVertexTextureCoordBufferBLEND = GL.GenBuffer();
+            GL.bindBuffer(BufferTarget.ArrayBuffer, cubeVertexTextureCoordBufferBLEND);
+
+            GL.bufferData(BufferTarget.ArrayBuffer, new Float32Array(laTextureCoordsBLEND), GL.STATIC_DRAW);
+            cubeVertexTextureCoordBufferBLEND.itemSize = 2;
+            cubeVertexTextureCoordBufferBLEND.numItems = 4*iiBLEND;
+
+            cubeVertexIndexBufferBLEND = GL.GenBuffer();
+            GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBufferBLEND);
+        
+            GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(laCubeVertexIndicesBLEND), GL.STATIC_DRAW);
+            cubeVertexIndexBufferBLEND.itemSize = 1;
+            cubeVertexIndexBufferBLEND.numItems = 6*iiBLEND;
+		
+		    cubeVertexNormalBufferBLEND = GL.GenBuffer();
+            GL.bindBuffer(BufferTarget.ArrayBuffer, cubeVertexNormalBufferBLEND);
+        
+            GL.bufferData(BufferTarget.ArrayBuffer, new Float32Array(laVertexNormalsBLEND), GL.STATIC_DRAW);
+            cubeVertexNormalBufferBLEND.itemSize = 3;
+            cubeVertexNormalBufferBLEND.numItems = 4;*/
+		    
+        }
