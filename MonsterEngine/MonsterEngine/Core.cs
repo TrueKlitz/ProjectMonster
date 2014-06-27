@@ -3,7 +3,6 @@ using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-//using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 using System.Collections.Generic;
 
@@ -13,19 +12,23 @@ namespace MonsterEngine
     {
         private GameWindow game;
         public Player player;
-        private Vector3[] vertices;// new Vector3[iMapSize * iMapSize];
+        private Vector3[] vertices;
+        private Vector3[] normals;
+        private Vector2[] texCoord;
         private KeyboardState kbState_old;
         private KeyboardState kbState_new;
         private MouseState msState;
         private Matrix4 mCamera;
+        private Level level;
+
+        private static int tGrass,tRock;
 
         public float fDeltaTime;
         private float fConsoleUpdate;
 
-        private int iMapSize = 128;
+        private int iMapSize = 256;// 256 is the maximum
         private int iTriangleCount = 0;
-        private int iVBO, iIBO;
-        private int iTest = 0;
+        private int iVBO, iIBO, iTBO, iNBO;
 
         public void load(GameWindow game_)
         {
@@ -38,52 +41,40 @@ namespace MonsterEngine
             game.X = 1921;
             game.Y = 0;
 
-            string sVertex = ".../.../shader/vertex.glsl";
-            string sFragement = ".../.../shader/fragment.glsl";
-            
-            int vShaderHandle, fShaderHandle, programmHandle;
-            vShaderHandle = GL.CreateShader(ShaderType.VertexShader);
-            fShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
-
-            programmHandle = GL.CreateProgram();  //create shader program
-
-            sVertex = System.IO.File.ReadAllText(@sVertex);
-            sFragement = System.IO.File.ReadAllText(@sFragement);
-
-            Console.Write(sVertex + "\n" + sFragement);
-
-            GL.ShaderSource(vShaderHandle, sVertex);  //attach file to the shader handle
-            GL.ShaderSource(fShaderHandle, sFragement);
-
-            GL.CompileShader(vShaderHandle); //compile the shaders
-            GL.CompileShader(fShaderHandle);
-
-            GL.AttachShader(programmHandle, vShaderHandle);
-            GL.AttachShader(programmHandle, fShaderHandle);
-
-            GL.LinkProgram(programmHandle);
-
-            GL.UseProgram(programmHandle);
-
+            level = new Level(200, "level1");
             player = new Player(this);
             
-            CreateVertexBuffer();
+            CreateBuffers();
+
             mCamera = Matrix4.CreateTranslation(0f, 0f, -5f);
+
+            Console.Write("\n"+GL.GetString(StringName.Version));
+
+            tGrass = Texture.LoadTexture(".../.../textures/Grass.png");
+            tRock = Texture.LoadTexture(".../.../textures/Rock.png");
+
+            Console.Write("\n Texture ID: "+ tGrass + "," + tRock );
+            
         }
         
-        void CreateVertexBuffer()
+        void CreateBuffers()
         {
+            iMapSize = level.MapSize();
             iTriangleCount = ((iMapSize - 1) * 6) * (iMapSize - 1);
             vertices = new Vector3[iMapSize * iMapSize];
+            texCoord = new Vector2[iMapSize * iMapSize];
+            normals = new Vector3[iMapSize * iMapSize];
 
-            for (int x = 0; x < iMapSize; x++)
+            Random rnd = new Random();
+            for (int x = 0; x < iMapSize ; x++)
             {
                 for (int z = 0; z < iMapSize; z++)
                 {
-                    vertices[x * iMapSize + z] = new Vector3(x/32.0f, (float)(Math.Cos(x/10.0f+iTest)),z/32.0f); 
+                    vertices[x * iMapSize + z] = new Vector3(x / 8.0f, level.faHeightmap[x,z], z / 8.0f);
+                    normals[x * iMapSize + z] = new Vector3(0.0f,1.0f,0.0f);
+                    texCoord[x * iMapSize + z] = new Vector2(x/10.0f, z/10.0f);
                 }
-            }     
-    
+            }
             short[] indices = new short[iMapSize * iMapSize * 6];
             int index = 0;
 
@@ -102,11 +93,34 @@ namespace MonsterEngine
                 }
             }
 
+            GL.GenBuffers(1, out iTBO);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iTBO);
+            GL.BufferData<Vector2>(BufferTarget.ArrayBuffer,
+                                   new IntPtr(texCoord.Length * Vector2.SizeInBytes),
+                                   texCoord, BufferUsageHint.StaticDraw);
+
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 0, 0);
+
+            GL.GenBuffers(1, out iNBO);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iNBO);
+            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
+                                   new IntPtr(normals.Length * Vector3.SizeInBytes),
+                                   normals, BufferUsageHint.StaticDraw);
+
+            GL.EnableVertexAttribArray(2);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+
             GL.GenBuffers(1, out iVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(vertices.Length * Vector3.SizeInBytes),
                                    vertices, BufferUsageHint.StaticDraw);
+
+            GL.EnableVertexAttribArray(0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+
             GL.GenBuffers(1, out iIBO);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, iIBO);
             GL.BufferData<short>(BufferTarget.ElementArrayBuffer,
@@ -157,31 +171,6 @@ namespace MonsterEngine
        
         public void update()
         {
-            iTest++;
-            for (int x = 0; x < iMapSize; x++)
-            {
-                for (int z = 0; z < iMapSize; z++)
-                {
-                    vertices[x * iMapSize + z] = new Vector3(x / 32.0f, (float)((Math.Sin(x / 20.0f) / 4.0f) * (Math.Cos((iTest) / 100.0f) / 3.0f) + (Math.Sin(x) * Math.Cos(z * x) / 10.0f)), z / 32.0f);
-                }
-            }
-            for (int x = 1; x < iMapSize -1; x++)
-            {
-                for (int z = 1; z < iMapSize -1; z++)
-                {
-                    vertices[(x) * iMapSize + (z)].Y = (
-                        vertices[(x + 1) * iMapSize + (z)].Y +
-                        vertices[(x - 1) * iMapSize + (z)].Y +
-                        vertices[(x) * iMapSize + (z + 1)].Y +
-                        vertices[(x) * iMapSize + (z - 1)].Y
-                        ) / 4;
-                }
-            }
-            GL.GenBuffers(1, out iVBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
-                                   new IntPtr(vertices.Length * Vector3.SizeInBytes),
-                                   vertices, BufferUsageHint.StaticDraw);
             // add game logic, input handling
             if (game.Focused)
             {
@@ -194,9 +183,10 @@ namespace MonsterEngine
 
             player.update();
 
-            if (fConsoleUpdate > 100)
+            if (fConsoleUpdate > 200)
             {
                 Console.Write("\n Deltatime: " + fDeltaTime + " Playerspeed: " + player.vMove + " Playerposition: " + player.vPosition);
+
                 fConsoleUpdate = 0;
             }
 
@@ -216,9 +206,9 @@ namespace MonsterEngine
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.CullFace(CullFaceMode.Back);
-            
-            GL.PolygonMode(MaterialFace.FrontAndBack,PolygonMode.Point);
+            GL.PolygonMode(MaterialFace.FrontAndBack,PolygonMode.Line);
+            GL.ActiveTexture(TextureUnit.Texture0 + tGrass);
+            GL.DepthMask(true);
             GL.PushMatrix();
             GL.DrawElements(PrimitiveType.Triangles, iTriangleCount , DrawElementsType.UnsignedShort, 0);
             GL.PopMatrix();

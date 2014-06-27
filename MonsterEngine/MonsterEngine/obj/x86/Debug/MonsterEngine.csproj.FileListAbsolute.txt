@@ -13,3 +13,11 @@ C:\Users\Sebastian\Documents\GitHub\MonsterEngine\MonsterEngine\MonsterEngine\bi
 C:\Users\Sebastian\Documents\GitHub\MonsterEngine\MonsterEngine\MonsterEngine\bin\Debug\OpenTK.pdb
 C:\Users\Sebastian\Documents\GitHub\MonsterEngine\MonsterEngine\MonsterEngine\bin\Debug\OpenTK.xml
 C:\Users\Sebastian\Documents\GitHub\MonsterEngine\MonsterEngine\MonsterEngine\obj\x86\Debug\MonsterEngine.csprojResolveAssemblyReference.cache
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\obj\x86\Debug\MonsterEngine.exe
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\obj\x86\Debug\MonsterEngine.pdb
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Debug\MonsterEngine.exe
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Debug\MonsterEngine.pdb
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Debug\OpenTK.dll
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Debug\OpenTK.pdb
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Debug\OpenTK.xml
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\obj\x86\Debug\MonsterEngine.csprojResolveAssemblyReference.cache
