@@ -18,7 +18,7 @@ namespace MonsterEngine
         private KeyboardState kbState_old;
         private KeyboardState kbState_new;
         private MouseState msState;
-        private Matrix4 mCamera;
+        private Matrix4 mCamera, mProjection;
         private Level level;
 
         private static int tGrass,tRock;
@@ -41,7 +41,7 @@ namespace MonsterEngine
             game.X = 1921;
             game.Y = 0;
 
-            level = new Level(200, "level1");
+            level = new Level(200, "Testlevel");
             player = new Player(this);
             
             CreateBuffers();
@@ -54,12 +54,84 @@ namespace MonsterEngine
             tRock = Texture.LoadTexture(".../.../textures/Rock.png");
 
             Console.Write("\n Texture ID: "+ tGrass + "," + tRock );
+
+            mProjection = Matrix4.CreatePerspectiveFieldOfView(2.0f, 16/9.0f, 0.001f, 100f);
+
+            loadShader();
+
+        }
+        int vertexHandle, fragmentHandle, shaderProgramHandle;
+        void loadShader()
+        {
+            string vertexShaderSource = @"
+            #version 140
+ 
+            // object space to camera space transformation
+            uniform mat4 camera_matrix;            
+ 
+            // camera space to clip coordinates
+            uniform mat4 projection_matrix;
+
+            // incoming vertex position
+            in vec3 vertex_position;
+ 
+            // incoming vertex normal
+            in vec3 vertex_normal;
+ 
+            // transformed vertex normal
+            out vec3 normal;
+ 
+            void main(void)
+            {
+              //not a proper transformation if modelview_matrix involves non-uniform scaling
+              normal = ( modelview_matrix * vec4( vertex_normal, 0 ) ).xyz;
+ 
+              // transforming the incoming vertex position
+                gl_Position = projection_matrix * camera_matrix * vec4( vertex_position, 1 );
+            }";
+            string fragmentShaderSource = @"
+            #version 140
+ 
+            precision highp float;
+ 
+            const vec3 ambient = vec3( 0.3, 0.3, 0.3 );
+            const vec3 lightVecNormalized = normalize( vec3( 0.5, 0.5, 2 ) );
+            const vec3 lightColor = vec3( 1.0, 1.0, 1.0 );
+ 
+            in vec3 normal;
+ 
+            out vec4 out_frag_color;
+ 
+            void main(void)
+            {
+              float diffuse = clamp( dot( lightVecNormalized, normalize( normal ) ), 0.0, 1.0 );
+              out_frag_color = vec4(0f,1f,1f,1f);//vec4( ambient + diffuse * lightColor, 1.0 );
+            }";
+            vertexHandle = GL.CreateShader(ShaderType.VertexShader);
+            fragmentHandle = GL.CreateShader(ShaderType.FragmentShader);
+
+            GL.ShaderSource(vertexHandle, vertexShaderSource);
+            GL.ShaderSource(fragmentHandle, fragmentShaderSource);
+
+            GL.CompileShader(vertexHandle);
+            GL.CompileShader(fragmentHandle);
+
+            shaderProgramHandle = GL.CreateProgram();
+
+            GL.AttachShader(shaderProgramHandle, vertexHandle);
+            GL.AttachShader(shaderProgramHandle, fragmentHandle);
+
+            GL.LinkProgram(shaderProgramHandle);
+            GL.UseProgram(shaderProgramHandle);
+            string programInfoLog;
+            GL.GetProgramInfoLog(shaderProgramHandle, out programInfoLog);
+            Console.WriteLine(programInfoLog); 
             
         }
         
         void CreateBuffers()
         {
-            iMapSize = level.MapSize();
+            iMapSize = level.MapSize()-2;
             iTriangleCount = ((iMapSize - 1) * 6) * (iMapSize - 1);
             vertices = new Vector3[iMapSize * iMapSize];
             texCoord = new Vector2[iMapSize * iMapSize];
@@ -70,9 +142,28 @@ namespace MonsterEngine
             {
                 for (int z = 0; z < iMapSize; z++)
                 {
-                    vertices[x * iMapSize + z] = new Vector3(x / 8.0f, level.faHeightmap[x,z], z / 8.0f);
-                    normals[x * iMapSize + z] = new Vector3(0.0f,1.0f,0.0f);
+                    
+                    vertices[x * iMapSize + z] = new Vector3(x / 8.0f, level.faHeightmap[x+1 , z+1 ], z / 8.0f);
+
+
+                    float normalDegreeX = degToRad(90);
+                    if (x >= 1 && z >= 1 && x <= iMapSize - 1 && z <= iMapSize - 1)
+                    {
+                        normalDegreeX = (float)Math.Acos( (x / 4.0f) / ((level.faHeightmap[x - 1, z] + level.faHeightmap[x + 1, z]) / 2.0f));
+                    }
+
+                    normals[x * iMapSize + z] = new Vector3( (float) Math.Sin(normalDegreeX) ,(float) Math.Cos(normalDegreeX) ,0.0f);
                     texCoord[x * iMapSize + z] = new Vector2(x/10.0f, z/10.0f);
+
+                    if (x == 0) vertices[x * iMapSize + z] = new Vector3((x + 1) / 8.0f, level.faHeightmap[x + 1, z + 1], z / 8.0f);
+                    if (z == 0) vertices[x * iMapSize + z] = new Vector3((x) / 8.0f, level.faHeightmap[x + 1, z + 1], (z + 1) / 8.0f);
+                    if (x == iMapSize-1) vertices[x * iMapSize + z] = new Vector3((x - 1) / 8.0f, level.faHeightmap[x + 1, z + 1], z / 8.0f);
+                    if (z == iMapSize-1) vertices[x * iMapSize + z] = new Vector3((x) / 8.0f, level.faHeightmap[x + 1, z + 1], (z - 1) / 8.0f);
+
+                    if (x == 0 && z == 0) vertices[x * iMapSize + z] = new Vector3((x + 1) / 8.0f, level.faHeightmap[x + 1, z + 1], (z+1) / 8.0f);
+                    if (x == iMapSize-1 && z == 0) vertices[x * iMapSize + z] = new Vector3((x - 1) / 8.0f, level.faHeightmap[x + 1, z + 1], (z + 1) / 8.0f);
+                    if (x == iMapSize-1 && z == iMapSize-1) vertices[x * iMapSize + z] = new Vector3((x - 1) / 8.0f, level.faHeightmap[x + 1, z + 1], (z - 1) / 8.0f);
+                    if (x == 0 && z == iMapSize - 1) vertices[x * iMapSize + z] = new Vector3((x + 1) / 8.0f, level.faHeightmap[x + 1, z + 1], (z - 1) / 8.0f);
                 }
             }
             short[] indices = new short[iMapSize * iMapSize * 6];
@@ -80,7 +171,7 @@ namespace MonsterEngine
 
             for (int x = 0; x < iMapSize ; x++)
             {
-               for (int z = 0; z < iMapSize-1; z++)
+               for (int z = 0; z < iMapSize -1; z++)
                {
                     int offset = x * iMapSize + z;
                     indices[index] = (short)(offset + 0);
@@ -107,6 +198,7 @@ namespace MonsterEngine
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(normals.Length * Vector3.SizeInBytes),
                                    normals, BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes, 0);
 
             GL.EnableVertexAttribArray(2);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
@@ -116,6 +208,7 @@ namespace MonsterEngine
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(vertices.Length * Vector3.SizeInBytes),
                                    vertices, BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes, 0);
 
             GL.EnableVertexAttribArray(0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
@@ -192,7 +285,8 @@ namespace MonsterEngine
 
             mCamera = Matrix4.CreateTranslation(player.vPosition) * Matrix4.CreateRotationY( degToRad(player.fPitch) ) * Matrix4.CreateRotationX( degToRad(player.fYaw));           
         }
-        
+
+        int uniformCameraMatrixPointer, uniformProjectionMatrixPointer;
         public void draw()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -202,6 +296,10 @@ namespace MonsterEngine
             GL.LoadIdentity();
             GL.LoadMatrix(ref mCamera);
 
+            uniformCameraMatrixPointer = GL.GetUniformLocation(shaderProgramHandle, "camera_matrix");
+            uniformProjectionMatrixPointer = GL.GetUniformLocation(shaderProgramHandle, "projection_matrix");
+            SetCameraMatrix();
+            SetProjectionMatrix();
             GL.EnableVertexAttribArray(0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
@@ -215,6 +313,16 @@ namespace MonsterEngine
             game.SwapBuffers();
         }
 
+        private void SetCameraMatrix()
+        {
+            GL.UniformMatrix4(uniformCameraMatrixPointer, false, ref mCamera);
+        }
+
+        private void SetProjectionMatrix()
+        {
+            GL.UniformMatrix4(uniformProjectionMatrixPointer, false, ref mProjection);
+        }
+
         public void resize()
         {
             GL.Viewport(0, 0, game.Width, game.Height);
@@ -226,7 +334,7 @@ namespace MonsterEngine
         //Helper Functions:
         public float degToRad(float degree)
         {
-            return degree * 0.0174532925f;
+            return degree * (float) ( Math.PI / 180.0f) ;
         }
 
     }

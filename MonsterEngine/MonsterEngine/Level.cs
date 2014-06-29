@@ -8,10 +8,10 @@ namespace MonsterEngine
     class Level
     {
         String sSeed;
+        Random random;
+
 
         private int iSize;
-        private int iRndNumGen = 1;
-        private int iOldRndNum = 1;
         public float[,] faHeightmap;
 
         public int MapSize()
@@ -24,86 +24,138 @@ namespace MonsterEngine
             iSize = size_;
             sSeed = seed_;
             faHeightmap = new float[iSize,iSize];
+            random = new Random(sSeed.GetHashCode());
             GenerateHeighmap();
         }
 
         private void GenerateHeighmap()
         {
-            float lSeed = (RandomNum(2147483646) + 1) / 2147483647.0f; 
-            float mapInnerSize = 200.0f;
+
+            float lSeed = (float)random.NextDouble();
+            float mapInnerSize = 50.0f;
+
             for (int x = 0; x < iSize; x++)
             {
                 for (int y = 0; y < iSize; y++)
                 {
-                    faHeightmap[x, y] = (float)Math.Floor(Noise.Generate(( x+lSeed ) / mapInnerSize, ( y+lSeed ) / mapInnerSize));
+                    faHeightmap[x, y] += (float)Math.Floor(Noise.Generate(x / mapInnerSize + lSeed, y / mapInnerSize + lSeed ));
                 }
             }
-            mapInnerSize = mapInnerSize / (RandomNum(3) * 1.0f + 1.0f);
+
+            mapInnerSize = 45.0f;
+            lSeed = (float)random.NextDouble();
             for (int x = 0; x < iSize; x++)
             {
                 for (int y = 0; y < iSize; y++)
-                {      
-                    faHeightmap[x, y] = faHeightmap[x, y] + ( (float)Math.Floor(Noise.Generate(( x+lSeed + iSize) / mapInnerSize, ( y+lSeed + iSize) / mapInnerSize)));
+                {
+                    faHeightmap[x, y] = Math.Max(faHeightmap[x, y], (float)Math.Floor(Noise.Generate(x / mapInnerSize - lSeed, y / mapInnerSize - lSeed, (x+y)/mapInnerSize)));
                 }   
             }
 
-
-            for (int i = 0; i < 15; i++)
-            {
-                for (int x = 1; x < iSize - 1; x++)
-                {
-                    for (int y = 1; y < iSize - 1; y++)
-                    {
-                        faHeightmap[x, y] =
-                            (faHeightmap[x + 1, y] + faHeightmap[x - 1, y] + faHeightmap[x, y + 1] + faHeightmap[x, y - 1] +
-                              faHeightmap[x + 1, y + 1] + faHeightmap[x - 1, y - 1] + faHeightmap[x - 1, y + 1] + faHeightmap[x + 1, y - 1]) / 8.0f;
-                    }
-                }
-            }
-
+            mapInnerSize = 100.0f;
+            lSeed =(float) random.NextDouble();
             for (int x = 0; x < iSize; x++)
             {
                 for (int y = 0; y < iSize; y++)
                 {
-                    faHeightmap[x, y] = faHeightmap[x, y] * (RandomNum(1000) / 900.0f + 0.5f);
+                    faHeightmap[x, y] += (float)Math.Floor(Noise.Generate(x / mapInnerSize - lSeed, y / mapInnerSize - lSeed, (x + y) / mapInnerSize));
                 }
             }
 
-            for (int i = 0; i < 5; i++)
+            mapInnerSize = 90.0f;
+            lSeed = (float)random.NextDouble();
+            for (int x = 0; x < iSize; x++)
             {
-                for (int x = 1; x < iSize - 1; x++)
+                for (int y = 0; y < iSize; y++)
                 {
-                    for (int y = 1; y < iSize - 1; y++)
+                    faHeightmap[x, y] += (float)Math.Floor(Noise.Generate(x / mapInnerSize + lSeed, y / mapInnerSize + lSeed, (x + y) / mapInnerSize));
+                }
+            }
+
+            // 0 , -1 , -2 sind die Werte, die bis jetzt generiert wurden.
+            float[,] faHeighMapTemp = new float[iSize,iSize];
+
+            int iMergeRange = 6;
+
+            for (int i = 0; i < 1; i++)
+            {
+                for (int x = 0; x < iSize; x++)
+                {
+                    for (int y = 01; y < iSize; y++)
                     {
-                        faHeightmap[x, y] =
-                            (faHeightmap[x + 1, y] + faHeightmap[x - 1, y] + faHeightmap[x, y + 1] + faHeightmap[x, y - 1] +
-                              faHeightmap[x + 1, y + 1] + faHeightmap[x - 1, y - 1] + faHeightmap[x - 1, y + 1] + faHeightmap[x + 1, y - 1]) / 8.0f ;
+                        int iNull = 0;
+                        int iOne = 0;
+                        int iTwo = 0;
+                        int iThree = 0;
+
+                        for (int xx = -iMergeRange; xx <= iMergeRange; xx++)
+                        {
+                            for (int yy = -iMergeRange; yy <= iMergeRange; yy++)
+                            {
+                                if (x + xx >= 0 && y + yy >= 0 && x + xx < iSize && y + yy < iSize)
+                                {
+                                    switch ((int)faHeightmap[x + xx, y + yy])
+                                    {
+                                        case 0:
+                                            iNull++;
+                                            break;
+                                        case -1:
+                                            iOne++;
+                                            break;
+                                        case -2:
+                                            iTwo++;
+                                            break;
+                                        case -3:
+                                            iThree++;
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+
+                        faHeighMapTemp[x, y] = 1f;
+                        if (iNull >= iOne && iNull >= iTwo && iNull >= iThree) faHeighMapTemp[x, y] = 0f;
+                        if (iOne >= iNull && iOne >= iTwo && iOne >= iThree) faHeighMapTemp[x, y] = 1f;
+                        if (iTwo >= iNull && iTwo >= iOne && iTwo >= iThree) faHeighMapTemp[x, y] = 1.75f;
+                        if (iThree >= iNull && iThree >= iOne && iThree >= iTwo) faHeighMapTemp[x, y] = 2.5f;
                     }
                 }
+                faHeightmap = faHeighMapTemp;
             }
-
             
-
+            faHeighMapTemp = null;
 
             for (int x = 0; x < iSize; x++)
             {
                 for (int y = 0; y < iSize; y++)
                 {
-                    if (x == 0) faHeightmap[x, y] = faHeightmap[x + 1, y];
-                    if (y == 0) faHeightmap[x, y] = faHeightmap[x , y +1];
-                    if (y == iSize - 1) faHeightmap[x, y] = faHeightmap[x, y - 1];
-                    if (x == iSize - 1) faHeightmap[x, y] = faHeightmap[x - 1, y];
+                   // faHeightmap[x, y] += random.Next(100) / 500.0f;
                 }
             }
-        }
 
-        private int RandomNum(int range)
-        {
-            int rndNum = (int)(iOldRndNum + iRndNumGen * sSeed.GetHashCode() / 50123) % range;
-            if (rndNum <= 0) rndNum = rndNum * -1;
-            iRndNumGen++;
-            iOldRndNum = rndNum;
-            return rndNum;
+            for (int i = 0; i < 0; i++)
+            {
+                for (int x = 1; x < iSize - 1; x++)
+                {
+                    for (int y = 1; y < iSize - 1; y++)
+                    {
+                       faHeightmap[x, y] =
+                           (faHeightmap[x + 1, y] + faHeightmap[x - 1, y] + faHeightmap[x, y + 1] + faHeightmap[x, y - 1] +
+                            faHeightmap[x + 1, y + 1] + faHeightmap[x - 1, y - 1] + faHeightmap[x - 1, y + 1] + faHeightmap[x + 1, y - 1]) / (8.0f - ( faHeightmap[x,y] / 10.0f ) );
+                    }
+                }
+            }
+            for (int x = 0; x < iSize; x++)
+            {
+                for (int y = 0; y < iSize; y++)
+                {
+                    int l_ms = iSize - 1;
+                    faHeightmap[x,y] *= 1.0f;
+                    faHeightmap[x, y] += 0.5f;
+                    if (x == 0 | x == 1 | y == 0 | y == 1 | x == l_ms | x == l_ms - 1 | y == l_ms | y == l_ms - 1) faHeightmap[x, y] = 0.0f;
+                }
+            }
+
         }
     }
 }
