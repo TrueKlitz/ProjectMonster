@@ -11,7 +11,7 @@ namespace MonsterEngine
     class Core
     {
         private GameWindow game;
-        public Player player;
+        private Player player;
         private Vector3[] vertices;
         private Vector3[] normals;
         private Vector2[] texCoord;
@@ -23,9 +23,9 @@ namespace MonsterEngine
 
         private static int tGrass,tRock;
 
-        public float fDeltaTime;
+        private float fDeltaTime;
         private float fConsoleUpdate;
-
+        private int uniformCameraMatrixPointer, uniformProjectionMatrixPointer, vertexHandle, fragmentHandle, shaderProgramHandle;
         private int iMapSize = 256;// 256 is the maximum
         private int iTriangleCount = 0;
         private int iVBO, iIBO, iTBO, iNBO;
@@ -55,12 +55,12 @@ namespace MonsterEngine
 
             Console.Write("\n Texture ID: "+ tGrass + "," + tRock );
 
-            mProjection = Matrix4.CreatePerspectiveFieldOfView(2.0f, 16/9.0f, 0.001f, 100f);
+            mProjection = Matrix4.CreatePerspectiveFieldOfView(1.0f, 16/9.0f, 0.001f, 100f);
 
             loadShader();
 
         }
-        int vertexHandle, fragmentHandle, shaderProgramHandle;
+
         void loadShader()
         {
             string vertexShaderSource = @"
@@ -84,7 +84,7 @@ namespace MonsterEngine
             void main(void)
             {
               //not a proper transformation if modelview_matrix involves non-uniform scaling
-              normal = ( modelview_matrix * vec4( vertex_normal, 0 ) ).xyz;
+              normal = (vec4( vertex_normal, 0 ) ).xyz;
  
               // transforming the incoming vertex position
                 gl_Position = projection_matrix * camera_matrix * vec4( vertex_position, 1 );
@@ -94,19 +94,22 @@ namespace MonsterEngine
  
             precision highp float;
  
-            const vec3 ambient = vec3( 0.3, 0.3, 0.3 );
-            const vec3 lightVecNormalized = normalize( vec3( 0.5, 0.5, 2 ) );
-            const vec3 lightColor = vec3( 1.0, 1.0, 1.0 );
+            const vec3 ambient = vec3( 0.2, 0.2, 0.2 );
+            const vec3 lightVecNormalized = normalize( vec3( 0.3, 0.25, 0.5 ) );
+            const vec3 lightColor = vec3( 0.2, 0.7, 0.2 );
  
+            //uniform sampler2D gSampler;
             in vec3 normal;
  
             out vec4 out_frag_color;
- 
+
             void main(void)
             {
+              //vec4 texture = texture2D(gSampler, TexCoord0.st);
               float diffuse = clamp( dot( lightVecNormalized, normalize( normal ) ), 0.0, 1.0 );
-              out_frag_color = vec4(0f,1f,1f,1f);//vec4( ambient + diffuse * lightColor, 1.0 );
+              out_frag_color = vec4( ambient + diffuse * lightColor, 1.0 );
             }";
+
             vertexHandle = GL.CreateShader(ShaderType.VertexShader);
             fragmentHandle = GL.CreateShader(ShaderType.FragmentShader);
 
@@ -144,15 +147,6 @@ namespace MonsterEngine
                 {
                     
                     vertices[x * iMapSize + z] = new Vector3(x / 8.0f, level.faHeightmap[x+1 , z+1 ], z / 8.0f);
-
-
-                    float normalDegreeX = degToRad(90);
-                    if (x >= 1 && z >= 1 && x <= iMapSize - 1 && z <= iMapSize - 1)
-                    {
-                        normalDegreeX = (float)Math.Acos( (x / 4.0f) / ((level.faHeightmap[x - 1, z] + level.faHeightmap[x + 1, z]) / 2.0f));
-                    }
-
-                    normals[x * iMapSize + z] = new Vector3( (float) Math.Sin(normalDegreeX) ,(float) Math.Cos(normalDegreeX) ,0.0f);
                     texCoord[x * iMapSize + z] = new Vector2(x/10.0f, z/10.0f);
 
                     if (x == 0) vertices[x * iMapSize + z] = new Vector3((x + 1) / 8.0f, level.faHeightmap[x + 1, z + 1], z / 8.0f);
@@ -166,6 +160,23 @@ namespace MonsterEngine
                     if (x == 0 && z == iMapSize - 1) vertices[x * iMapSize + z] = new Vector3((x + 1) / 8.0f, level.faHeightmap[x + 1, z + 1], (z - 1) / 8.0f);
                 }
             }
+
+            for (int x = 0; x < iMapSize ; x++)
+            {
+                for (int z = 0; z < iMapSize ; z++)
+                {
+                    if (x > 1 && z > 1)
+                    {
+                        Vector3 u = new Vector3(1.0f, 0.0f, level.faHeightMapTemp[x + 1, z] - level.faHeightMapTemp[x - 1, z]);
+                        Vector3 v = new Vector3(0.0f, 1.0f, level.faHeightMapTemp[x, z + 1] - level.faHeightMapTemp[x, z - 1]);
+                        normals[x * iMapSize + z] = Vector3.Normalize(Vector3.Cross(u, v));
+                    }
+                    else
+                        normals[x * iMapSize + z] = new Vector3(0.0f,0.0f,0.0f);
+
+                }
+            }
+
             short[] indices = new short[iMapSize * iMapSize * 6];
             int index = 0;
 
@@ -184,36 +195,30 @@ namespace MonsterEngine
                 }
             }
 
+            level.disposeData();
+
+            //Generate TexCoordinates
             GL.GenBuffers(1, out iTBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iTBO);
             GL.BufferData<Vector2>(BufferTarget.ArrayBuffer,
                                    new IntPtr(texCoord.Length * Vector2.SizeInBytes),
                                    texCoord, BufferUsageHint.StaticDraw);
 
-            GL.EnableVertexAttribArray(1);
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 0, 0);
-
+            //Generate Normals
             GL.GenBuffers(1, out iNBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iNBO);
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(normals.Length * Vector3.SizeInBytes),
                                    normals, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes, 0);
 
-            GL.EnableVertexAttribArray(2);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-
+            //Generate Vertices
             GL.GenBuffers(1, out iVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(vertices.Length * Vector3.SizeInBytes),
                                    vertices, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes, 0);
 
-            GL.EnableVertexAttribArray(0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-
+            //Generate Indices  
             GL.GenBuffers(1, out iIBO);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, iIBO);
             GL.BufferData<short>(BufferTarget.ElementArrayBuffer,
@@ -285,12 +290,12 @@ namespace MonsterEngine
 
             mCamera = Matrix4.CreateTranslation(player.vPosition) * Matrix4.CreateRotationY( degToRad(player.fPitch) ) * Matrix4.CreateRotationX( degToRad(player.fYaw));           
         }
-
-        int uniformCameraMatrixPointer, uniformProjectionMatrixPointer;
+ 
         public void draw()
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Color4.DarkBlue);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.Enable(EnableCap.DepthTest);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -300,16 +305,25 @@ namespace MonsterEngine
             uniformProjectionMatrixPointer = GL.GetUniformLocation(shaderProgramHandle, "projection_matrix");
             SetCameraMatrix();
             SetProjectionMatrix();
-            GL.EnableVertexAttribArray(0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
+
+            //Aktiviert Das 2. Vertexattribut und bindet es zum NBO
+            GL.EnableVertexAttribArray(1);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iNBO);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.PolygonMode(MaterialFace.FrontAndBack,PolygonMode.Line);
-            GL.ActiveTexture(TextureUnit.Texture0 + tGrass);
-            GL.DepthMask(true);
+
+            //Aktiviert Das 1. Vertexattribut und bindet es zum VBO
+            GL.EnableVertexAttribArray(0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 0, 0);
+
+            GL.PolygonMode(MaterialFace.FrontAndBack,PolygonMode.Fill);
+            GL.Enable(EnableCap.CullFace);
+
             GL.PushMatrix();
             GL.DrawElements(PrimitiveType.Triangles, iTriangleCount , DrawElementsType.UnsignedShort, 0);
             GL.PopMatrix();
+
             game.SwapBuffers();
         }
 
