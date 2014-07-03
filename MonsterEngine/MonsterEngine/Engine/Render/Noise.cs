@@ -32,7 +32,7 @@ using System.Text;
 //For more information, please refer to <http://unlicense.org/>
 
 
-namespace MonsterEngine
+namespace MonsterEngine.Engine.Render
 {
     /// <summary>
     /// Implementation of the Perlin simplex noise, an improved Perlin noise algorithm.

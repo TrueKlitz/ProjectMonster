@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 
-namespace MonsterEngine
+namespace MonsterEngine.Engine.Render
 {
-    class Player
+    class Camera
     {
         Core core;
         
@@ -17,7 +17,7 @@ namespace MonsterEngine
 
         public float fPitch, fYaw;
 
-        public Player(Core core_)
+        public Camera(Core core_)
         {
             core = core_;
             fMovementSpeed = 0.14f;

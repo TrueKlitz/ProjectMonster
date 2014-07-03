@@ -4,12 +4,12 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using MonsterEngine.Engine;
 
 namespace MonsterEngine
 {
     class Program
     {
-        
         [STAThread]
         public static void Main()
         {

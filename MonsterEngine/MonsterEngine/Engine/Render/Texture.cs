@@ -3,7 +3,7 @@ using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
 using System;
 
-namespace MonsterEngine
+namespace MonsterEngine.Engine.Render
 {
     class Texture
     {

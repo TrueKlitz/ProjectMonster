@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using MonsterEngine.Engine.Render;
 
-namespace MonsterEngine
+namespace MonsterEngine.Game
 {
     class Level
     {
@@ -13,7 +14,7 @@ namespace MonsterEngine
 
         private int iSize;
         public float[,] faHeightmap;
-        public float[,] faHeightMapTemp;// = new float[iSize, iSize];
+        public float[,] faHeightMapNormalGen;// = new float[iSize, iSize];
 
         public int MapSize()
         {
@@ -25,17 +26,16 @@ namespace MonsterEngine
             iSize = size_;
             sSeed = seed_;
             faHeightmap = new float[iSize,iSize];
-            faHeightMapTemp = new float[iSize, iSize];
+            faHeightMapNormalGen = new float[iSize, iSize];
             random = new Random(sSeed.GetHashCode());
-            GenerateHeighmap();
         }
 
         public void disposeData()
         {
-            faHeightMapTemp = null;
+            faHeightMapNormalGen = null;
         }
 
-        private void GenerateHeighmap()
+        public void Load()
         {
 
             float lSeed = (float)random.NextDouble();
@@ -119,36 +119,54 @@ namespace MonsterEngine
                             }
                         }
 
-                        faHeightMapTemp[x, y] = 1f;
-                        if (iNull >= iOne && iNull >= iTwo && iNull >= iThree) faHeightMapTemp[x, y] = 0f;
-                        if (iOne >= iNull && iOne >= iTwo && iOne >= iThree) faHeightMapTemp[x, y] = 1f;
-                        if (iTwo >= iNull && iTwo >= iOne && iTwo >= iThree) faHeightMapTemp[x, y] = 1.75f;
-                        if (iThree >= iNull && iThree >= iOne && iThree >= iTwo) faHeightMapTemp[x, y] = 2.5f;
+                        faHeightMapNormalGen[x, y] = 1f;
+                        if (iNull >= iOne && iNull >= iTwo && iNull >= iThree) faHeightMapNormalGen[x, y] = 0f;
+                        if (iOne >= iNull && iOne >= iTwo && iOne >= iThree) faHeightMapNormalGen[x, y] = 1f;
+                        if (iTwo >= iNull && iTwo >= iOne && iTwo >= iThree) faHeightMapNormalGen[x, y] = 2f;
+                        if (iThree >= iNull && iThree >= iOne && iThree >= iTwo) faHeightMapNormalGen[x, y] = 3f;
                     }
                 }
 
+            }
+
+            
+            for (int x = 1; x < iSize - 1; x++)
+            {
+                for (int y = 1; y < iSize - 1; y++)
+                {
+                    faHeightmap[x, y] = faHeightMapNormalGen[x, y];
+                }
+            }
+            for (int x = 1; x < iSize - 1; x++)
+            {
+                for (int y = 1; y < iSize - 1; y++)
+                {
+                    faHeightMapNormalGen[x, y] += (float)(random.NextDouble() * ( random.Next(3) * random.NextDouble()) );
+                }
+            }
+            
+            for (int i = 0; i < 3; i++)
+            {
+                for (int x = 1; x < iSize - 1; x++)
+                {
+                    for (int y = 1; y < iSize - 1; y++)
+                    {
+                        faHeightMapNormalGen[x, y] =
+                           (faHeightMapNormalGen[x + 1, y] + faHeightMapNormalGen[x - 1, y] + faHeightMapNormalGen[x, y + 1] + faHeightMapNormalGen[x, y - 1] +
+                            faHeightMapNormalGen[x + 1, y + 1] + faHeightMapNormalGen[x - 1, y - 1] + faHeightMapNormalGen[x - 1, y + 1] + faHeightMapNormalGen[x + 1, y - 1]) / 8.0f;
+                    }
+                }
             }
 
             for (int x = 1; x < iSize - 1; x++)
             {
                 for (int y = 1; y < iSize - 1; y++)
                 {
-                    faHeightmap[x, y] = faHeightMapTemp[x, y];
+                    faHeightmap[x, y] = (faHeightmap[x, y]*4 + faHeightMapNormalGen[x, y]*10) / 14.0f;
                 }
             }
 
-            for (int i = 0; i < 2; i++)
-            {
-                for (int x = 1; x < iSize - 1; x++)
-                {
-                    for (int y = 1; y < iSize - 1; y++)
-                    {
-                        faHeightMapTemp[x, y] =
-                           (faHeightMapTemp[x + 1, y] + faHeightMapTemp[x - 1, y] + faHeightMapTemp[x, y + 1] + faHeightMapTemp[x, y - 1] +
-                            faHeightMapTemp[x + 1, y + 1] + faHeightMapTemp[x - 1, y - 1] + faHeightMapTemp[x - 1, y + 1] + faHeightMapTemp[x + 1, y - 1]) / (8.0f - (faHeightMapTemp[x, y] / 10.0f));
-                    }
-                }
-            }
+
             for (int x = 0; x < iSize; x++)
             {
                 for (int y = 0; y < iSize; y++)
