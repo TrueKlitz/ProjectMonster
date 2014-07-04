@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Core.cs" />
+    <Compile Include="Engine\Helper.cs" />
     <Compile Include="Engine\Physic\Input.cs" />
     <Compile Include="Engine\Render\Terrain.cs" />
     <Compile Include="Game\Game.cs" />

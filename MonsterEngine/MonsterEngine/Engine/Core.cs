@@ -15,17 +15,17 @@ namespace MonsterEngine.Engine
         private GameWindow gameWindow;
         private Game.Game game;
         private Camera camera;
+        public Helper helper;
 
         private KeyboardState kbState_old;
         private KeyboardState kbState_new;
         private MouseState msState;
-        private Matrix4 mCamera, mProjection;
-
+        
         private static int tGrass,tRock,tSand,tGrassRock, tDirt;
 
         private float fDeltaTime;
         private float fConsoleUpdate;
-        private int uniformCameraMatrixPointer, uniformProjectionMatrixPointer, vertexHandle, fragmentHandle, shaderProgramHandle;
+        public int uniformCameraMatrixPointer, uniformProjectionMatrixPointer, vertexHandle, fragmentHandle, shaderProgramHandle;
 
         public void load(GameWindow game_)
         {
@@ -40,9 +40,9 @@ namespace MonsterEngine.Engine
             gameWindow.Y = 0;
             gameWindow.CursorVisible = false;
 
-            camera = new Camera(this);
-
-            mCamera = Matrix4.CreateTranslation( 10f, 0f, -5f);
+            helper = new Helper();
+            camera = new Camera(this,Matrix4.CreateTranslation(10f, 0f, -5f),Matrix4.CreatePerspectiveFieldOfView(0.75f, gameWindow.Width/(gameWindow.Height*1.0f), 0.01f, 50f));
+            
 
             Console.Write("\n"+GL.GetString(StringName.Version));
 
@@ -51,8 +51,6 @@ namespace MonsterEngine.Engine
             tSand = Texture.LoadTexture(".../.../Textures/Sand.png");
             tGrassRock = Texture.LoadTexture(".../.../Textures/GrassRock.png");
             tDirt = Texture.LoadTexture(".../.../Textures/Dirt.png");
-
-            mProjection = Matrix4.CreatePerspectiveFieldOfView(0.75f, gameWindow.Width/(gameWindow.Height*1.0f), 0.01f, 50f);
 
             loadShader();
 
@@ -159,8 +157,6 @@ namespace MonsterEngine.Engine
             GL.GetProgramInfoLog(shaderProgramHandle, out programInfoLog);
             Console.WriteLine("\n"+programInfoLog);
 
-            //GL.ProgramUniform1(shaderProgramHandle, test, 0);
-
             GL.BindAttribLocation(shaderProgramHandle, 0, "vertex_position");
             GL.BindAttribLocation(shaderProgramHandle, 1, "vertex_normal");
             GL.BindAttribLocation(shaderProgramHandle, 2, "vertex_texCoord");
@@ -184,19 +180,19 @@ namespace MonsterEngine.Engine
             msState = Mouse.GetState();
 
             if (kbState_new.IsKeyDown(Key.W))
-                camera.vMove = new Vector3( (float)Math.Sin(degToRad(camera.fPitch)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(degToRad(camera.fPitch)) * camera.fMovementSpeed );
+                camera.vMove = new Vector3((float)Math.Sin(helper.degToRad(camera.fPitch)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(helper.degToRad(camera.fPitch)) * camera.fMovementSpeed);
             if (kbState_new.IsKeyDown(Key.S))
-                camera.vMove = new Vector3((float)Math.Sin(degToRad(camera.fPitch)) * camera.fMovementSpeed, 0.0f, (float)Math.Cos(degToRad(camera.fPitch)) * -camera.fMovementSpeed);
+                camera.vMove = new Vector3((float)Math.Sin(helper.degToRad(camera.fPitch)) * camera.fMovementSpeed, 0.0f, (float)Math.Cos(helper.degToRad(camera.fPitch)) * -camera.fMovementSpeed);
             if (kbState_new.IsKeyDown(Key.A))
-                camera.vMove = new Vector3((float)Math.Sin(degToRad(camera.fPitch + 90f)) * camera.fMovementSpeed, 0.0f, (float)Math.Cos(degToRad(camera.fPitch + 90f)) * -camera.fMovementSpeed);
+                camera.vMove = new Vector3((float)Math.Sin(helper.degToRad(camera.fPitch + 90f)) * camera.fMovementSpeed, 0.0f, (float)Math.Cos(helper.degToRad(camera.fPitch + 90f)) * -camera.fMovementSpeed);
             if (kbState_new.IsKeyDown(Key.D))
-                camera.vMove = new Vector3((float)Math.Sin(degToRad(camera.fPitch - 90f)) * camera.fMovementSpeed, 0.0f, (float)Math.Cos(degToRad(camera.fPitch - 90f)) * -camera.fMovementSpeed);
+                camera.vMove = new Vector3((float)Math.Sin(helper.degToRad(camera.fPitch - 90f)) * camera.fMovementSpeed, 0.0f, (float)Math.Cos(helper.degToRad(camera.fPitch - 90f)) * -camera.fMovementSpeed);
 
             if (kbState_new.IsKeyDown(Key.D) && kbState_new.IsKeyDown(Key.W))
-                camera.vMove = new Vector3((float)Math.Sin(degToRad(camera.fPitch + 45f)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(degToRad(camera.fPitch + 45f)) * camera.fMovementSpeed);
+                camera.vMove = new Vector3((float)Math.Sin(helper.degToRad(camera.fPitch + 45f)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(helper.degToRad(camera.fPitch + 45f)) * camera.fMovementSpeed);
 
             if (kbState_new.IsKeyDown(Key.A) && kbState_new.IsKeyDown(Key.W))
-                camera.vMove = new Vector3((float)Math.Sin(degToRad(camera.fPitch - 45f)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(degToRad(camera.fPitch - 45f)) * camera.fMovementSpeed);
+                camera.vMove = new Vector3((float)Math.Sin(helper.degToRad(camera.fPitch - 45f)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(helper.degToRad(camera.fPitch - 45f)) * camera.fMovementSpeed);
 
             if (kbState_new.IsKeyUp(Key.W) && kbState_new.IsKeyUp(Key.S) && kbState_new.IsKeyUp(Key.A) && kbState_new.IsKeyUp(Key.D))
                 camera.vMove = new Vector3(0.0f, 0.0f, 0.0f);
@@ -213,8 +209,8 @@ namespace MonsterEngine.Engine
 
             Point WindowCenter = new Point(gameWindow.X + gameWindow.Width/2 ,gameWindow.Y + gameWindow.Height/2 );
             msState = Mouse.GetState();
-            camera.fPitch = msState.X / 10.0f;
-            camera.fYaw = msState.Y / 10.0f;
+            camera.fPitch = msState.X / 10.0f + 90f;
+            camera.fYaw = msState.Y / 10.0f + 65f;
             Mouse.SetPosition(WindowCenter.X, WindowCenter.Y);
             kbState_old = kbState_new;
         }
@@ -225,22 +221,18 @@ namespace MonsterEngine.Engine
             if (gameWindow.Focused)
             {
                 inputUpdate();
+                camera.update();
             }
 
             fDeltaTime = (float) (100.0 / gameWindow.RenderFrequency);
 
-            fConsoleUpdate += fDeltaTime;
-
-            camera.update();
+            fConsoleUpdate += fDeltaTime;     
 
             if (fConsoleUpdate > 200)
             {
                 Console.Write("\n Deltatime: " + fDeltaTime + " Playerspeed: " + camera.vMove + " Playerposition: " + camera.vPosition);
-
                 fConsoleUpdate = 0;
-            }
-
-            mCamera = Matrix4.CreateTranslation(camera.vPosition) * Matrix4.CreateRotationY( degToRad(camera.fPitch) ) * Matrix4.CreateRotationX( degToRad(camera.fYaw));           
+            }    
         }
  
         public void draw()
@@ -251,36 +243,20 @@ namespace MonsterEngine.Engine
 
             uniformCameraMatrixPointer = GL.GetUniformLocation(shaderProgramHandle, "camera_matrix");
             uniformProjectionMatrixPointer = GL.GetUniformLocation(shaderProgramHandle, "projection_matrix");
-            SetCameraMatrix();
-            SetProjectionMatrix();
+
+            camera.SetCameraMatrix();
+            camera.SetProjectionMatrix();
 
             GL.Enable(EnableCap.CullFace);
 
             GL.DrawElements(PrimitiveType.Triangles, game.terrain.GetTriangleCount() , DrawElementsType.UnsignedShort, 0);
 
-
             gameWindow.SwapBuffers();
-        }
-
-        private void SetCameraMatrix()
-        {
-            GL.UniformMatrix4(uniformCameraMatrixPointer, false, ref mCamera);
-        }
-
-        private void SetProjectionMatrix()
-        {
-            GL.UniformMatrix4(uniformProjectionMatrixPointer, false, ref mProjection);
-        }
+        }    
 
         public void resize()
         {
             GL.Viewport(0, 0, gameWindow.Width, gameWindow.Height);
-        }
-        
-        //Helper Functions:
-        public float degToRad(float degree)
-        {
-            return degree * (float) ( Math.PI / 180.0f) ;
         }
 
     }
