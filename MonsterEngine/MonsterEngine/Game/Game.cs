@@ -24,9 +24,14 @@ namespace MonsterEngine.Game
         public void Load()
         {
             level.Load();
-            terrain = new Terrain(level.faHeightmap , level.faHeightMapNormalGen);
-            terrain.CreateBuffers();
-            terrain.BindBuffers();
+            terrain = new Terrain(level.faHeightmap , level.faHeightMapNormalGen, 0.0f,0.0f);
+            level.disposeData();
         }
+
+        public void Draw()
+        {
+            terrain.Draw();
+        }
+
     }
 }

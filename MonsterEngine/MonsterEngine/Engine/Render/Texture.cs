@@ -37,5 +37,12 @@ namespace MonsterEngine.Engine.Render
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             return id;
         }
+
+        public static void BindTexture(ref int textureId, TextureUnit textureUnit, string UniformName, int _shaderProgrammHandle)
+        {
+            GL.ActiveTexture(textureUnit);
+            GL.BindTexture(TextureTarget.Texture2D, textureId);
+            GL.Uniform1(GL.GetUniformLocation(_shaderProgrammHandle, UniformName), textureUnit - TextureUnit.Texture0);
+        }
     }
 }

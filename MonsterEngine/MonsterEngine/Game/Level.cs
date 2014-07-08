@@ -33,6 +33,7 @@ namespace MonsterEngine.Game
         public void disposeData()
         {
             faHeightMapNormalGen = null;
+            faHeightmap = null;
         }
 
         public void Load()
