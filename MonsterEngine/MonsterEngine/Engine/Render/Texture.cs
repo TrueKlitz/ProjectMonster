@@ -7,11 +7,11 @@ namespace MonsterEngine.Engine.Render
 {
     class Texture
     {
-        Core core;
-        public Texture(Core core_)
+       
+        public Texture()
         {
-            core = core_;
         }
+
         public static int LoadTexture(string filename)
         {
             if (String.IsNullOrEmpty(filename))

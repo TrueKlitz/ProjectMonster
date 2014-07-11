@@ -21,7 +21,7 @@ namespace MonsterEngine.Engine.Render
         public Camera(Core _core, Matrix4 _mCamera, Matrix4 _mProjection)
         {
             core = _core;
-            fMovementSpeed = 0.14f;
+            fMovementSpeed = 0.05f;
             vPosition = new Vector3(-8.0f,-10.0f,-8.0f);
             mCamera = _mCamera;
             mProjection = _mProjection;
@@ -31,8 +31,8 @@ namespace MonsterEngine.Engine.Render
 
         public void update()
         {
-            vPosition += vMove;
-            mCamera = Matrix4.CreateTranslation(vPosition) * Matrix4.CreateRotationY(core.helper.degToRad(fPitch)) * Matrix4.CreateRotationX(core.helper.degToRad(fYaw));
+            vPosition += vMove * (float)core.dDeltaTime;
+            mCamera = Matrix4.CreateTranslation(vPosition) * Matrix4.CreateRotationY(Helper.degToRad(fPitch)) * Matrix4.CreateRotationX(Helper.degToRad(fYaw));
 
             SetCameraMatrix();
             SetProjectionMatrix();
@@ -42,6 +42,12 @@ namespace MonsterEngine.Engine.Render
         {
             uniformCameraMatrixPointer = GL.GetUniformLocation(_shaderProgramHandle, "camera_matrix");
             uniformProjectionMatrixPointer = GL.GetUniformLocation(_shaderProgramHandle, "projection_matrix");
+
+            mCamera = Matrix4.CreateTranslation(vPosition) * Matrix4.CreateRotationY(Helper.degToRad(fPitch)) * Matrix4.CreateRotationX(Helper.degToRad(fYaw));
+
+            SetCameraMatrix();
+            SetProjectionMatrix();
+           
         }
 
         public void SetCameraMatrix()

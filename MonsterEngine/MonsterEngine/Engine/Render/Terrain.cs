@@ -75,7 +75,7 @@ namespace MonsterEngine.Engine.Render
               height = vertex_position.y;
               TexCoord0 = vertex_texCoord;
               // transforming the incoming vertex position
-                gl_Position = projection_matrix * camera_matrix * vec4( vertex_position, 1 );
+                gl_Position = projection_matrix * camera_matrix * vec4(vertex_position.xyz, 1 );
             }";
             string fragmentShaderSource = @"
             #version 140
@@ -148,13 +148,17 @@ namespace MonsterEngine.Engine.Render
             GL.BindAttribLocation(shaderProgramHandle, 0, "vertex_position");
             GL.BindAttribLocation(shaderProgramHandle, 1, "vertex_normal");
             GL.BindAttribLocation(shaderProgramHandle, 2, "vertex_texCoord");
+
+        }
+
+        private void BindTextures()
+        {
             Texture.BindTexture(ref tGrass, TextureUnit.Texture0, "texGrass", shaderProgramHandle);
             Texture.BindTexture(ref tRock, TextureUnit.Texture1, "texRock", shaderProgramHandle);
             Texture.BindTexture(ref tSand, TextureUnit.Texture2, "texSand", shaderProgramHandle);
             Texture.BindTexture(ref tGrassRock, TextureUnit.Texture3, "texGrassRock", shaderProgramHandle);
             Texture.BindTexture(ref tDirt, TextureUnit.Texture4, "texDirt", shaderProgramHandle);
         }
-
 
         private void CreateBuffers()
         {
@@ -279,6 +283,7 @@ namespace MonsterEngine.Engine.Render
         {
             GL.UseProgram(shaderProgramHandle);
             BindBuffers();
+            BindTextures();
             GL.DrawElements(PrimitiveType.Triangles, iTriangleCount, DrawElementsType.UnsignedShort, 0);
         }
     }

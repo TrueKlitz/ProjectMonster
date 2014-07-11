@@ -1,0 +1,8 @@
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Release\MonsterEngine.exe
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Release\MonsterEngine.pdb
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Release\OpenTK.dll
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Release\OpenTK.pdb
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\bin\Release\OpenTK.xml
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\obj\x86\Release\MonsterEngine.csprojResolveAssemblyReference.cache
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\obj\x86\Release\MonsterEngine.exe
+C:\Users\Sebastian\Documents\GitHub\ProjectMonster\MonsterEngine\MonsterEngine\obj\x86\Release\MonsterEngine.pdb
