@@ -14,7 +14,7 @@ namespace MonsterEngine.Engine
     class Core
     {
         public GameWindow gameWindow;
-        private Game.Game game;
+        public static Game.Game game;
 
         public double dDeltaTime;
         private float fConsoleUpdate;
@@ -34,6 +34,7 @@ namespace MonsterEngine.Engine
             gameWindow.WindowState = WindowState.Fullscreen;
 
             game = new Game.Game(this);
+            game.Load();
 
             Console.Write("\n"+GL.GetString(StringName.Version));
         }
@@ -49,6 +50,11 @@ namespace MonsterEngine.Engine
             if (fConsoleUpdate > 1000)
             {
                 //Console.Write("\n Deltatime: " + dDeltaTime + " Playerspeed: " + game.camera.vMove + " Playerposition: " + game.camera.vPosition + "TEST: " + gameWindow.RenderFrequency);
+                float cameraTime = game.camera.sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
+                float terrainTime = game.terrain.sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
+                float gameUpdateTime = game.swUpdate.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
+                float gameDrawTime = game.swDraw.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
+                Console.WriteLine("Time spend: Camera["+cameraTime+"ms] Terrain["+terrainTime+"ms] Update["+gameUpdateTime+"ms] Draw["+gameDrawTime+"]" );
                 fConsoleUpdate = 0;
             }    
         }
@@ -58,7 +64,8 @@ namespace MonsterEngine.Engine
             GL.ClearColor(Color4.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.DepthTest);
-            //GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.CullFace);
+            //GL.Enable(EnableCap.);
 
             game.Draw();
 

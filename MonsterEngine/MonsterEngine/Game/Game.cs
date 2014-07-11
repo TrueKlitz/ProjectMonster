@@ -19,52 +19,50 @@ namespace MonsterEngine.Game
         private Core core;
         private Input input;
         public Camera camera;
-
+        public Shaders shader;
         public Terrain terrain;
 
-        private GameObject test;
+        public Stopwatch swUpdate = new Stopwatch(),swDraw = new Stopwatch();
+        public static GameObject modelTank,modelFluid;
 
         public Game(Core _core)
         {
             core = _core;
-
+            shader = new Shaders();
             camera = new Camera(_core, Matrix4.CreateTranslation(10f, 0f, -5f), Matrix4.CreatePerspectiveFieldOfView(0.75f, _core.gameWindow.Width / (_core.gameWindow.Height * 1.0f), 0.01f, 500f)); ;
             input = new Input(core);
             level = new Level(256, "Test1");
-            Load();
         }
 
         public void Load()
         {
-
             level.Load();
             terrain = new Terrain(level.faHeightmap , level.faHeightMapNormalGen, 0.0f,0.0f);
             level.disposeData();
-            test = new GameObject("TestObj");
-
-            camera.SetShaderPointer(terrain.shaderProgramHandle);
-            
+            modelTank = new GameObject("Tank");
+            modelFluid = new GameObject("Fluid");
         }
 
         public void Update()
         {
-
+            swUpdate.Restart();
             if (core.gameWindow.Focused)
             {
                 input.inputUpdate(camera);
                 camera.update();
             }
-
+            swUpdate.Stop();
         }
 
         public void Draw()
         {
-            camera.SetShaderPointer(terrain.shaderProgramHandle);
-            terrain.Draw();
-            camera.SetShaderPointer(test.shaderProgramHandle);
-            test.BindDraw();
-            test.Draw();
+            swDraw.Restart();
+            if (core.gameWindow.Focused)
+            {
+                modelTank.BindDraw();
+                terrain.Draw();
+            }
+            swDraw.Stop();
         }
-
     }
 }
