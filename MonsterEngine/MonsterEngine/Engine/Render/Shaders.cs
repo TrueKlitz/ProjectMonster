@@ -20,9 +20,9 @@ namespace MonsterEngine.Engine.Render
 
         public Shaders()
         {
-            directionalLightColor = new Vector3(0.5f,0.5f,0.5f);
-            directionalLight = Vector3.Normalize(new Vector3(0.3f, 0.25f, 0.5f));
-            ambient = new Vector3(0.2f, 0.2f, 0.4f);
+            directionalLightColor = new Vector3(0.8f,0.9f,0.8f);
+            directionalLight = Vector3.Normalize(new Vector3(0.8f, 0.7f, 0.2f));
+            ambient = new Vector3(0.3f, 0.3f, 0.2f);
             
             LoadShaderOne();
             LoadShaderTwo();

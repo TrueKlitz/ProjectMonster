@@ -12,7 +12,7 @@ using MonsterEngine.Engine.Render;
 
 namespace MonsterEngine.Engine
 {
-    class GameObject
+    class GameModel
     {
         String fileLocation;
         String content;
@@ -31,7 +31,7 @@ namespace MonsterEngine.Engine
         private int normal_count = 0;
         private int uniformModelViewMatrixPointer = 0;
 
-        public GameObject(String _fileLocation)
+        public GameModel(String _fileLocation)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();

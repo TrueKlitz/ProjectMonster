@@ -8,17 +8,17 @@ namespace MonsterEngine.Game
 {
     class Tank
     {
-        Matrix4 location;
-        public Tank(Matrix4 _location){
-            location = _location;
+        private GameObject obj;
+        public Tank(Vector3 _Pos){
+            obj = new GameObject(_Pos, ref Game.modelTank);
         }
         public void Update()
         {
+            obj.Update();
         }
         public void Draw()
         {
-            Game.modelTank.SetModelViewMatrix(location);
-            Game.modelTank.Draw();
+            obj.Draw();
         }
     }
 }

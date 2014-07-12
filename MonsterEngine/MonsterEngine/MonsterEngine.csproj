@@ -65,8 +65,9 @@
   <ItemGroup>
     <Compile Include="Engine\Core.cs" />
     <Compile Include="Engine\Helper.cs" />
-    <Compile Include="Engine\GameObject.cs" />
+    <Compile Include="Engine\GameModel.cs" />
     <Compile Include="Engine\Render\Shaders.cs" />
+    <Compile Include="Game\GameObject.cs" />
     <Compile Include="Game\Input.cs" />
     <Compile Include="Engine\Render\Terrain.cs" />
     <Compile Include="Game\Game.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Engine\Render\Noise.cs" />
     <Compile Include="Engine\Render\Camera.cs" />
     <Compile Include="Game\Tank.cs" />
+    <Compile Include="Game\Water.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Render\Texture.cs" />
@@ -102,8 +104,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game\config.txt" />
-    <Content Include="Game\GameObjects\Fluid\normal.png" />
-    <Content Include="Game\GameObjects\Fluid\texture.png" />
+    <Content Include="Game\GameObjects\Water\normal.png" />
+    <Content Include="Game\GameObjects\Water\texture.png" />
     <Content Include="Game\GameObjects\Tank\normal.png" />
     <Content Include="Game\GameObjects\Tank\texture.png" />
     <Content Include="Textures\Grass.png" />
@@ -116,8 +118,9 @@
     <Folder Include="Engine\Physic\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Game\GameObjects\Fluid\object.blend" />
-    <None Include="Game\GameObjects\Fluid\object.obj" />
+    <None Include="Game\GameObjects\Water\object.blend" />
+    <None Include="Game\GameObjects\Water\object.mtl" />
+    <None Include="Game\GameObjects\Water\object.obj" />
     <None Include="Game\GameObjects\Tank\object.blend" />
     <None Include="Game\GameObjects\Tank\object.mtl" />
     <None Include="Game\GameObjects\Tank\object.obj" />

@@ -23,9 +23,10 @@ namespace MonsterEngine.Game
         public Terrain terrain;
 
         public Stopwatch swUpdate = new Stopwatch(),swDraw = new Stopwatch();
-        public static GameObject modelTank,modelFluid;
+        public static GameModel modelTank,modelWater;
 
         public static Tank tank;
+        public static Water water;
 
         public Game(Core _core)
         {
@@ -41,10 +42,10 @@ namespace MonsterEngine.Game
             level.Load();
             terrain = new Terrain(level.faHeightmap , level.faHeightMapNormalGen, 0.0f,0.0f);
             level.disposeData();
-            modelTank = new GameObject("Tank");
-            modelFluid = new GameObject("Fluid");
-
-            tank = new Tank(Matrix4.CreateTranslation(new Vector3(3,2,11)));
+            modelTank = new GameModel("Tank");
+            modelWater = new GameModel("Water");
+            tank = new Tank(new Vector3(2,2,11));
+            water = new Water(new Vector3(21.0f,1.1f,21.0f));
         }
 
         public void Update()
@@ -54,6 +55,8 @@ namespace MonsterEngine.Game
             {
                 input.inputUpdate(camera);
                 camera.update();
+                tank.Update();
+                water.Update();
             }
             swUpdate.Stop();
         }
@@ -66,6 +69,10 @@ namespace MonsterEngine.Game
                 modelTank.BindDraw();
                 tank.Draw();
                 terrain.Draw();
+                modelWater.BindDraw();
+                water.Draw();
+                
+               
             }
             swDraw.Stop();
         }
