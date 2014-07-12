@@ -14,7 +14,7 @@ namespace MonsterEngine
         public static void Main()
         {
             Core core = new Core();
-            using (var game = new GameWindow())
+            using (var game = new GameWindow(core.WIDTH,core.HEIGHT, new GraphicsMode(32, 24, 0, core.MSAA)))
             {
                 game.Load += (sender, e) =>
                 {

@@ -25,6 +25,8 @@ namespace MonsterEngine.Game
         public Stopwatch swUpdate = new Stopwatch(),swDraw = new Stopwatch();
         public static GameObject modelTank,modelFluid;
 
+        public static Tank tank;
+
         public Game(Core _core)
         {
             core = _core;
@@ -41,6 +43,8 @@ namespace MonsterEngine.Game
             level.disposeData();
             modelTank = new GameObject("Tank");
             modelFluid = new GameObject("Fluid");
+
+            tank = new Tank(Matrix4.CreateTranslation(new Vector3(3,2,11)));
         }
 
         public void Update()
@@ -60,6 +64,7 @@ namespace MonsterEngine.Game
             if (core.gameWindow.Focused)
             {
                 modelTank.BindDraw();
+                tank.Draw();
                 terrain.Draw();
             }
             swDraw.Stop();

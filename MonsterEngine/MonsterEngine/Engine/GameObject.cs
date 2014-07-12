@@ -20,9 +20,11 @@ namespace MonsterEngine.Engine
         private Vector3[] vertices;
         private Vector3[] normals;
         private Vector2[] texCoord;
-        private int tGroundTexture;
+        private Vector3[] tangent;
 
-        private int iVBO, iTBO, iNBO;
+        private int tGroundTexture, tNormal;
+
+        private int iVBO, iTBO, iNBO, iTanBO;
         private int vertex_count = 0;
         private int point_count = 0;
         private int texCoord_count = 0;
@@ -35,6 +37,7 @@ namespace MonsterEngine.Engine
             sw.Start();
             fileLocation = ".../.../Game/GameObjects/" + _fileLocation + "/object.obj";
             tGroundTexture = Texture.LoadTexture(".../.../Game/GameObjects/"+_fileLocation+"/texture.png");
+            tNormal = Texture.LoadTexture(".../.../Game/GameObjects/" + _fileLocation + "/normal.png");
             LoadFile();
             LoadBuffers();
             uniformModelViewMatrixPointer = GL.GetUniformLocation(Core.game.shader.S2_shaderProgramHandle, "modelview_matrix");
@@ -115,6 +118,7 @@ namespace MonsterEngine.Engine
             vertices = new Vector3[point_count * 3];
             texCoord = new Vector2[point_count * 3];
             normals = new Vector3[point_count * 3];
+            tangent = new Vector3[point_count * 3];
 
             point_count = 0;
 
@@ -138,6 +142,22 @@ namespace MonsterEngine.Engine
                 line_split = null;
             }
 
+            for (int i = 0; i < normals.Length; i++)
+            {
+                Vector3 c1 = Vector3.Cross(normals[i],new Vector3(0.0f, 0.0f, 1.0f));
+                Vector3 c2 = Vector3.Cross(normals[i],new Vector3(0.0f, 1.0f, 0.0f));
+
+                if (Helper.Vec3Lenght(c1) > Helper.Vec3Lenght(c2))
+                {
+                    tangent[i] = c1;
+                }
+                else
+                {
+                    tangent[i] = c2;
+                }
+                tangent[i] = Vector3.Normalize(tangent[i]);
+            }
+
             content_line = null;
             content = null;
 
@@ -145,6 +165,13 @@ namespace MonsterEngine.Engine
         
         private void LoadBuffers()
         {
+            //Generate TexCoordinates
+            GL.GenBuffers(1, out iTanBO);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iTanBO);
+            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
+                                   new IntPtr(tangent.Length * Vector3.SizeInBytes),
+                                   tangent, BufferUsageHint.StaticDraw);
+
             //Generate TexCoordinates
             GL.GenBuffers(1, out iTBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iTBO);
@@ -170,27 +197,30 @@ namespace MonsterEngine.Engine
         
         public void BindBuffers()
         {
-            //Aktiviert Das 3. Vertexattribut und bindet es zum TBO
-            GL.EnableVertexAttribArray(2);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, iTBO);
-            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 0, 0);
-
-            //Aktiviert Das 2. Vertexattribut und bindet es zum NBO
-            GL.EnableVertexAttribArray(1);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, iNBO);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-
             //Aktiviert Das 1. Vertexattribut und bindet es zum VBO
             GL.EnableVertexAttribArray(0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 0, 0);
+            //Aktiviert Das 2. Vertexattribut und bindet es zum NBO
+            GL.EnableVertexAttribArray(1);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iNBO);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+            //Aktiviert Das 3. Vertexattribut und bindet es zum TBO
+            GL.EnableVertexAttribArray(2);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iTBO);
+            GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 0, 0);
+            //Aktiviert Das 4. Vertexattribut und bindet es zum TanBO
+            GL.EnableVertexAttribArray(3);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, iTanBO);
+            GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 0, 0);      
+
         }
 
         public void BindDraw()
         {
             GL.UseProgram(Core.game.shader.S2_shaderProgramHandle);
             BindBuffers();
-            Core.game.shader.SetAttributesShaderTwo(tGroundTexture);
+            Core.game.shader.SetAttributesShaderTwo(tGroundTexture, tNormal);
         }
 
         public void SetModelViewMatrix(Matrix4 mPosScaleRot)

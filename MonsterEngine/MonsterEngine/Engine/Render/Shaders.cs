@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace MonsterEngine.Engine.Render
 {
@@ -15,61 +16,69 @@ namespace MonsterEngine.Engine.Render
          * Shader 2 (S2) is being used for Game Objects
         */
 
+        public Vector3 directionalLight, ambient, directionalLightColor;
+
         public Shaders()
         {
+            directionalLightColor = new Vector3(0.5f,0.5f,0.5f);
+            directionalLight = Vector3.Normalize(new Vector3(0.3f, 0.25f, 0.5f));
+            ambient = new Vector3(0.2f, 0.2f, 0.4f);
+            
             LoadShaderOne();
             LoadShaderTwo();
+            UpdateUniforms();
         }
        
+        public void UpdateUniforms()
+        {
+            GL.UseProgram(S1_shaderProgramHandle);
+            GL.Uniform3(GL.GetUniformLocation(S1_shaderProgramHandle, "directionalLight"), directionalLight);
+            GL.Uniform3(GL.GetUniformLocation(S1_shaderProgramHandle, "directionalLightColor"), directionalLightColor);
+            GL.Uniform3(GL.GetUniformLocation(S1_shaderProgramHandle, "ambient"),  ambient);
+            GL.UseProgram(S2_shaderProgramHandle);
+            GL.Uniform3(GL.GetUniformLocation(S2_shaderProgramHandle, "directionalLight"), directionalLight);
+            GL.Uniform3(GL.GetUniformLocation(S2_shaderProgramHandle, "directionalLightColor"), directionalLightColor);
+            GL.Uniform3(GL.GetUniformLocation(S2_shaderProgramHandle, "ambient"), ambient);
+        }
+
         private void LoadShaderOne()
         {
             int S1_vertexHandle, S1_fragmentHandle;
             string vertexShaderSource = @"
             #version 140
- 
-            // object space to camera space transformation
+
             uniform mat4 camera_matrix;            
- 
-            // camera space to clip coordinates
             uniform mat4 projection_matrix;
 
-            // incoming vertex position
             in vec3 vertex_position;
- 
-            // incoming vertex normal
             in vec3 vertex_normal;
- 
             in vec2 vertex_texCoord;
 
-            // transformed vertex normal
             out vec3 normal;
             out vec2 TexCoord0;
             out float height;
 
             void main(void)
             {
-              //not a proper transformation if modelview_matrix involves non-uniform scaling
               normal = (vec4( vertex_normal, 0 ) ).xyz;
               height = vertex_position.y;
               TexCoord0 = vertex_texCoord;
-              // transforming the incoming vertex position
-                gl_Position = projection_matrix * camera_matrix * vec4(vertex_position.xyz, 1 );
+              gl_Position = projection_matrix * camera_matrix * vec4(vertex_position.xyz, 1 );
             }";
             string fragmentShaderSource = @"
             #version 140
  
             precision highp float;
  
-            const vec3 ambient = vec3( 0.1, 0.1, 0.1 );
-            const vec3 lightVecNormalized = normalize( vec3( 0.3, 0.25, 0.5 ) );
-            const vec3 lightColor = vec3( 0.6, 0.6, 0.6 );
- 
             uniform sampler2D texGrass;
             uniform sampler2D texRock;
             uniform sampler2D texSand;
             uniform sampler2D texGrassRock;
             uniform sampler2D texDirt;
-
+            uniform vec3 ambient;
+            uniform vec3 directionalLight;
+            uniform vec3 directionalLightColor;  
+            
             in vec3 normal;
             in vec2 TexCoord0;
             in float height;
@@ -99,8 +108,8 @@ namespace MonsterEngine.Engine.Render
                 texture = vec4(0,0,0,1);
               }   
               
-              float diffuse = clamp( dot( lightVecNormalized, normalize( normal ) ), 0.0, 1.0 );
-              out_frag_color = texture * vec4( ambient + diffuse * lightColor, 1.0 );
+              float diffuse = clamp( dot( directionalLight, normalize( normal ) ), 0.0, 1.0 );
+              out_frag_color = texture * vec4( ambient + diffuse * directionalLightColor, 1.0 );
             }";
 
             S1_vertexHandle = GL.CreateShader(ShaderType.VertexShader);
@@ -142,59 +151,55 @@ namespace MonsterEngine.Engine.Render
             int S2_vertexHandle, S2_fragmentHandle;
             string vertexShaderSource = @"
             #version 140
- 
-            // object space to camera space transformation
+
             uniform mat4 camera_matrix;            
- 
-            // camera space to clip coordinates
             uniform mat4 projection_matrix;
-    
-            //Object Position/Rotation/Scale...
             uniform mat4 modelview_matrix;
 
-            // incoming vertex position
             in vec3 vertex_position;
- 
-            // incoming vertex normal
             in vec3 vertex_normal;
- 
-            in vec2 vertex_texCoord;
+            in vec2 vertex_texCoord0;
+            in vec3 vertex_tangent;
 
-            // transformed vertex normal
-            out vec3 normal;
+            out mat3 tbnMatrix;
             out vec2 TexCoord0;
+            out vec3 worldPos0;
 
             void main(void)
-            {
-              //not a proper transformation if modelview_matrix involves non-uniform scaling
-              normal = (vec4( vertex_normal, 0 ) ).xyz;
-              TexCoord0 = vertex_texCoord;
-              // transforming the incoming vertex position
-                gl_Position = projection_matrix * camera_matrix * modelview_matrix * vec4(vertex_position.xyz, 0.2 );
+            { 
+              worldPos0 = (modelview_matrix * vec4(vertex_position.xyz , 1.0 )).xyz;
+              vec3 n = normalize((modelview_matrix * vec4(vertex_normal , 0.0 )).xyz);
+              vec3 t = normalize((modelview_matrix * vec4(vertex_tangent , 0.0 )).xyz);
+              t = normalize(t - dot(t, n) * n);
+
+              vec3 biTangent = cross(t, n);
+
+              tbnMatrix = mat3(t, biTangent, n);
+              TexCoord0 = vertex_texCoord0;
+              gl_Position = projection_matrix * camera_matrix * modelview_matrix * vec4(vertex_position.xyz , 1.0 );
             }";
             string fragmentShaderSource = @"
             #version 140
  
             precision highp float;
  
-            const vec3 ambient = vec3( 0.1, 0.1, 0.1 );
-            const vec3 lightVecNormalized = normalize( vec3( 0.3, 0.25, 0.5 ) );
-            const vec3 lightColor = vec3( 0.6, 0.6, 0.6 );
- 
             uniform sampler2D texGround;
+            uniform sampler2D texNormal;
+            uniform vec3 ambient;
+            uniform vec3 directionalLight;
+            uniform vec3 directionalLightColor;  
 
-            in vec3 normal;
+            in mat3 tbnMatrix;
             in vec2 TexCoord0;
+            in vec3 worldPos0;            
 
             out vec4 out_frag_color;
 
             void main(void)
             {
-              vec4 texture = vec4(1,1,1,1);
-              texture = texture2D(texGround, TexCoord0.xy ) ;
-              
-              float diffuse = clamp( dot( lightVecNormalized, normalize( normal ) ), 0.0, 1.0 );
-              out_frag_color = texture * vec4( ambient + diffuse * lightColor, 1.0 );
+              vec3 normal = normalize(tbnMatrix * (2 * texture2D(texNormal, TexCoord0).xyz - 1));
+              float diffuse = clamp( dot( directionalLight, normal ), 0.0, 1.0 );
+              out_frag_color = texture2D( texGround , TexCoord0.xy ) * vec4( ambient + diffuse * directionalLightColor, 1.0 );
             }";
 
             S2_vertexHandle = GL.CreateShader(ShaderType.VertexShader);
@@ -219,13 +224,14 @@ namespace MonsterEngine.Engine.Render
 
             GL.BindAttribLocation(S2_shaderProgramHandle, 0, "vertex_position");
             GL.BindAttribLocation(S2_shaderProgramHandle, 1, "vertex_normal");
-            GL.BindAttribLocation(S2_shaderProgramHandle, 2, "vertex_texCoord");
-
+            GL.BindAttribLocation(S2_shaderProgramHandle, 2, "vertex_texCoord0");
+            GL.BindAttribLocation(S2_shaderProgramHandle, 3, "vertex_tangent");
         }
 
-        public void SetAttributesShaderTwo(int tGround)
+        public void SetAttributesShaderTwo(int tGround,int tNormal)
         {
             Texture.BindTexture(ref tGround, TextureUnit.Texture0, "texGround", S2_shaderProgramHandle);
+            Texture.BindTexture(ref tNormal, TextureUnit.Texture1, "texNormal", S2_shaderProgramHandle);
         }
     }
 }

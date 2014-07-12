@@ -101,9 +101,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Game\config.txt" />
+    <Content Include="Game\GameObjects\Fluid\normal.png" />
     <Content Include="Game\GameObjects\Fluid\texture.png" />
+    <Content Include="Game\GameObjects\Tank\normal.png" />
     <Content Include="Game\GameObjects\Tank\texture.png" />
-    <Content Include="Game\GameObjects\Tank\uv.png" />
     <Content Include="Textures\Grass.png" />
     <Content Include="Textures\GrassRock.png" />
     <Content Include="Textures\Dirt.png" />
@@ -117,7 +119,6 @@
     <None Include="Game\GameObjects\Fluid\object.blend" />
     <None Include="Game\GameObjects\Fluid\object.obj" />
     <None Include="Game\GameObjects\Tank\object.blend" />
-    <None Include="Game\GameObjects\Tank\object.blend1" />
     <None Include="Game\GameObjects\Tank\object.mtl" />
     <None Include="Game\GameObjects\Tank\object.obj" />
   </ItemGroup>

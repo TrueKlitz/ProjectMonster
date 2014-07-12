@@ -8,6 +8,7 @@ using OpenTK.Input;
 using System.Collections.Generic;
 using MonsterEngine.Engine.Render;
 using MonsterEngine.Game;
+using System.IO;
 
 namespace MonsterEngine.Engine
 {
@@ -19,24 +20,47 @@ namespace MonsterEngine.Engine
         public double dDeltaTime;
         private float fConsoleUpdate;
 
+        public int WIDTH, HEIGHT, MSAA;
+        public bool FULLSCREEN, VSYNC;
+        public String NAME;
+
+        public Core()
+        {
+            string config = File.ReadAllText(".../.../Game/config.txt");
+
+            string[] config_line = config.Split('\n');
+            for (int i = 0; i < config.Split('\n').Length; i++)
+            {
+                if (config_line[i].StartsWith("MSAA"))          MSAA = int.Parse(config_line[i].Split('=')[1]);
+                if (config_line[i].StartsWith("WIDTH"))         WIDTH = int.Parse(config_line[i].Split('=')[1]);
+                if (config_line[i].StartsWith("HEIGHT"))        HEIGHT = int.Parse(config_line[i].Split('=')[1]);
+                if (config_line[i].StartsWith("NAME"))          NAME = config_line[i].Split('=')[1];
+                if (config_line[i].StartsWith("FULLSCREEN"))    FULLSCREEN = bool.Parse(config_line[i].Split('=')[1]);
+                if (config_line[i].StartsWith("VSYNC"))         VSYNC = bool.Parse(config_line[i].Split('=')[1]);
+            }
+        }
+    
         public void load(GameWindow game_)
         {
            
             //setup settings, load textures, sounds
             gameWindow = game_;
-            gameWindow.VSync = VSyncMode.On;
-            gameWindow.Title = "Monster Engine";
-            gameWindow.Width = 1600;
-            gameWindow.Height = 900;
+            if(VSYNC)gameWindow.VSync = VSyncMode.On;
+            gameWindow.Title = NAME;
+            gameWindow.Width = WIDTH;
+            gameWindow.Height = HEIGHT;
             gameWindow.X = 1921;
             gameWindow.Y = 0;
             gameWindow.CursorVisible = false;
-            gameWindow.WindowState = WindowState.Fullscreen;
+            if(FULLSCREEN) gameWindow.WindowState = WindowState.Fullscreen;
 
             game = new Game.Game(this);
             game.Load();
 
             Console.Write("\n"+GL.GetString(StringName.Version));
+
+            GLEnable();
+
         }
   
         public void update()
@@ -63,14 +87,18 @@ namespace MonsterEngine.Engine
         {
             GL.ClearColor(Color4.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
-            //GL.Enable(EnableCap.);
-
+            
             game.Draw();
 
             gameWindow.SwapBuffers();
-        }    
+        }
+
+        private void GLEnable()
+        {
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+            
+        }
 
         public void resize()
         {

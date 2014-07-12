@@ -1,0 +1,7 @@
+﻿NAME=Monster Engine
+MSAA=8
+WIDTH=1600
+HEIGHT=900
+VSYNC=true
+FULLSCREEN=false
+            

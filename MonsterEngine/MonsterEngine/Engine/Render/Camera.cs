@@ -24,7 +24,7 @@ namespace MonsterEngine.Engine.Render
         public Camera(Core _core, Matrix4 _mCamera, Matrix4 _mProjection)
         {
             core = _core;
-            fMovementSpeed = 0.01f;
+            fMovementSpeed = 0.005f;
             vPosition = new Vector3(-8.0f,-10.0f,-8.0f);
             mCamera = _mCamera;
             mProjection = _mProjection;
