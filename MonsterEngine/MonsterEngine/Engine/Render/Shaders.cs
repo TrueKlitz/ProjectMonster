@@ -130,7 +130,7 @@ namespace MonsterEngine.Engine.Render
             GL.UseProgram(S1_shaderProgramHandle);
             string programInfoLog;
             GL.GetProgramInfoLog(S1_shaderProgramHandle, out programInfoLog);
-            Console.WriteLine("\n" + programInfoLog);
+            if (programInfoLog != "") Console.WriteLine(programInfoLog); else Console.WriteLine("Shader 1 was successfully compiled");
 
             GL.BindAttribLocation(S1_shaderProgramHandle, 0, "vertex_position");
             GL.BindAttribLocation(S1_shaderProgramHandle, 1, "vertex_normal");
@@ -220,7 +220,7 @@ namespace MonsterEngine.Engine.Render
             GL.UseProgram(S2_shaderProgramHandle);
             string programInfoLog;
             GL.GetProgramInfoLog(S2_shaderProgramHandle, out programInfoLog);
-            Console.WriteLine("\n" + programInfoLog);
+            if (programInfoLog != "") Console.WriteLine(programInfoLog); else Console.WriteLine("Shader 2 was successfully compiled");
 
             GL.BindAttribLocation(S2_shaderProgramHandle, 0, "vertex_position");
             GL.BindAttribLocation(S2_shaderProgramHandle, 1, "vertex_normal");

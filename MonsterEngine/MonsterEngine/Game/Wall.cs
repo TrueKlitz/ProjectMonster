@@ -7,17 +7,16 @@ using MonsterEngine.Engine;
 
 namespace MonsterEngine.Game
 {
-    class Tank
+    class Wall
     {
         private GameObject obj;
-        public Tank(Vector3 _Pos){
-            obj = new GameObject(_Pos, ref Game.modelTank);
-            obj.scale = 0.1f;
-            obj.rotation.Y = MathHelper.DegreesToRadians(90);
+        public Wall(Vector3 _Pos){
+            obj = new GameObject(_Pos, ref Game.modelWall);
+            obj.scale = 6.5f;
+            obj.drawDistance = 10.0f;
         }
         public void Update()
         {
-            obj.rotation.Y += 0.001f;
         }
         public void Draw()
         {

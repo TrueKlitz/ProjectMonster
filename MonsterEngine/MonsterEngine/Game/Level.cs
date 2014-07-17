@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using MonsterEngine.Engine.Render;
+using System.Diagnostics;
 
 namespace MonsterEngine.Game
 {
@@ -38,7 +39,9 @@ namespace MonsterEngine.Game
 
         public void Load()
         {
-
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            Console.WriteLine("Starting loading level");
             float lSeed = (float)random.NextDouble();
             float mapInnerSize = 50.0f;
 
@@ -138,6 +141,144 @@ namespace MonsterEngine.Game
                     faHeightmap[x, y] = faHeightMapNormalGen[x, y];
                 }
             }
+           float rampLenght = 10;
+            //Gernerate Ramps
+            for (int x = 10; x < iSize-10 ; x++)
+            {
+                for (int y = 10; y < iSize-10 ; y++)
+                {
+                    if (random.Next(4) == 0)
+                    {
+                        // right
+                        float height = faHeightmap[x, y];
+                        if (height == faHeightmap[x + 1, y] && height == faHeightmap[x - 1, y] && height == 2)
+                        {
+                            if (height != faHeightmap[x, y + 1] && height != faHeightmap[x - 1, y + 1] && height != faHeightmap[x + 1, y + 1] && faHeightmap[x, y + 1] == height - 1)
+                            {
+                                int correction = 0;
+                                for (int xx = -5; xx < 5; xx++)
+                                {
+                                    for (int yy = -5; yy < 5; yy++)
+                                    {
+                                        if (faHeightmap[x + xx, y + yy] == height | faHeightmap[x + xx, y + yy] == height - 1)
+                                        {
+                                            correction++;
+                                        }
+                                    }
+                                }
+                                if (correction >= 100)
+                                {
+                                    for (int i = 0; i < rampLenght; i++)
+                                    {
+                                        faHeightmap[x - 3, y + i] = height - (i / rampLenght);
+                                        faHeightmap[x - 2, y + i] = height - (i / rampLenght);
+                                        faHeightmap[x - 1, y + i] = height - (i / rampLenght);
+                                        faHeightmap[x, y + i] = height - (i / rampLenght);
+                                        faHeightmap[x + 1, y + i] = height - (i / rampLenght);
+                                        faHeightmap[x + 2, y + i] = height - (i / rampLenght);
+                                        faHeightmap[x + 3, y + i] = height - (i / rampLenght);
+                                    }
+                                }
+                            }
+                        }
+
+                        //left
+                        if (height == faHeightmap[x + 1, y] && height == faHeightmap[x - 1, y] && height == 2)
+                        {
+                            if (height != faHeightmap[x, y - 1] && height != faHeightmap[x - 1, y - 1] && height != faHeightmap[x + 1, y - 1] && faHeightmap[x, y - 1] == height - 1)
+                            {
+                                int correction = 0;
+                                for (int xx = -5; xx < 5; xx++)
+                                {
+                                    for (int yy = -5; yy < 5; yy++)
+                                    {
+                                        if (faHeightmap[x + xx, y + yy] == height | faHeightmap[x + xx, y + yy] == height - 1)
+                                        {
+                                            correction++;
+                                        }
+                                    }
+                                }
+                                if (correction >= 100)
+                                {
+                                    for (int i = 0; i < rampLenght; i++)
+                                    {
+                                        faHeightmap[x - 3, y - i] = height - (i / rampLenght);
+                                        faHeightmap[x - 2, y - i] = height - (i / rampLenght);
+                                        faHeightmap[x - 1, y - i] = height - (i / rampLenght);
+                                        faHeightmap[x, y - i] = height - (i / rampLenght);
+                                        faHeightmap[x + 1, y - i] = height - (i / rampLenght);
+                                        faHeightmap[x + 2, y - i] = height - (i / rampLenght);
+                                        faHeightmap[x + 3, y - i] = height - (i / rampLenght);
+                                    }
+                                }
+                            }
+                        }
+
+                        //up
+                        if (height == faHeightmap[x, y + 1] && height == faHeightmap[x, y - 1] && height == 2)
+                        {
+                            if (height != faHeightmap[x - 1, y] && height != faHeightmap[x - 1, y - 1] && height != faHeightmap[x - 1, y + 1] && faHeightmap[x - 1, y] == height - 1)
+                            {
+                                int correction = 0;
+                                for (int xx = -5; xx < 5; xx++)
+                                {
+                                    for (int yy = -5; yy < 5; yy++)
+                                    {
+                                        if (faHeightmap[x + xx, y + yy] == height | faHeightmap[x + xx, y + yy] == height - 1)
+                                        {
+                                            correction++;
+                                        }
+                                    }
+                                }
+                                if (correction >= 100)
+                                {
+                                    for (int i = 0; i < rampLenght; i++)
+                                    {
+                                        faHeightmap[x - i, y - 3] = height - (i / rampLenght);
+                                        faHeightmap[x - i, y - 2] = height - (i / rampLenght);
+                                        faHeightmap[x - i, y - 1] = height - (i / rampLenght);
+                                        faHeightmap[x - i, y] = height - (i / rampLenght);
+                                        faHeightmap[x - i, y + 1] = height - (i / rampLenght);
+                                        faHeightmap[x - i, y + 2] = height - (i / rampLenght);
+                                        faHeightmap[x - i, y + 3] = height - (i / rampLenght);
+                                    }
+                                }
+                            }
+                        }
+                        //down
+                        if (height == faHeightmap[x, y + 1] && height == faHeightmap[x, y - 1] && height == 2)
+                        {
+                            if (height != faHeightmap[x + 1, y] && height != faHeightmap[x + 1, y - 1] && height != faHeightmap[x + 1, y + 1] && faHeightmap[x + 1, y] == height - 1)
+                            {
+                                int correction = 0;
+                                for (int xx = -5; xx < 5; xx++)
+                                {
+                                    for (int yy = -5; yy < 5; yy++)
+                                    {
+                                        if (faHeightmap[x + xx, y + yy] == height | faHeightmap[x + xx, y + yy] == height - 1)
+                                        {
+                                            correction++;
+                                        }
+                                    }
+                                }
+                                if (correction >= 100)
+                                {
+                                    for (int i = 0; i < rampLenght; i++)
+                                    {
+                                        faHeightmap[x + i, y - 3] = height - (i / rampLenght);
+                                        faHeightmap[x + i, y - 2] = height - (i / rampLenght);
+                                        faHeightmap[x + i, y - 1] = height - (i / rampLenght);
+                                        faHeightmap[x + i, y] = height - (i / rampLenght);
+                                        faHeightmap[x + i, y + 1] = height - (i / rampLenght);
+                                        faHeightmap[x + i, y + 2] = height - (i / rampLenght);
+                                        faHeightmap[x + i, y + 3] = height - (i / rampLenght);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             for (int x = 1; x < iSize - 1; x++)
             {
                 for (int y = 1; y < iSize - 1; y++)
@@ -163,7 +304,7 @@ namespace MonsterEngine.Game
             {
                 for (int y = 1; y < iSize - 1; y++)
                 {
-                    faHeightmap[x, y] = (faHeightmap[x, y]*4 + faHeightMapNormalGen[x, y]*10) / 14.0f;
+                    faHeightmap[x, y] = (faHeightmap[x, y]*6 + faHeightMapNormalGen[x, y]*4) / 10.0f;
                 }
             }
 
@@ -179,6 +320,10 @@ namespace MonsterEngine.Game
                 }
             }
 
+            sw.Stop();
+            Console.WriteLine("Level loaded in "  + sw.ElapsedMilliseconds + "ms");
+
         }
+
     }
 }

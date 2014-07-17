@@ -67,10 +67,12 @@
     <Compile Include="Engine\Helper.cs" />
     <Compile Include="Engine\GameModel.cs" />
     <Compile Include="Engine\Render\Shaders.cs" />
-    <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Game\Input.cs" />
     <Compile Include="Engine\Render\Terrain.cs" />
     <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\Wall.cs" />
+    <Compile Include="Game\Tree.cs" />
     <Compile Include="Game\Level.cs" />
     <Compile Include="Engine\Render\Noise.cs" />
     <Compile Include="Engine\Render\Camera.cs" />
@@ -104,20 +106,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game\config.txt" />
+    <Content Include="Game\GameObjects\Wall\normal.png" />
+    <Content Include="Game\GameObjects\Wall\texture.png" />
+    <Content Include="Game\GameObjects\Tree\normal.png" />
+    <Content Include="Game\GameObjects\Tree\texture.png" />
+    <Content Include="Game\GameObjects\Tank\Kopie von normal.png" />
     <Content Include="Game\GameObjects\Water\normal.png" />
     <Content Include="Game\GameObjects\Water\texture.png" />
     <Content Include="Game\GameObjects\Tank\normal.png" />
     <Content Include="Game\GameObjects\Tank\texture.png" />
-    <Content Include="Textures\Grass.png" />
-    <Content Include="Textures\GrassRock.png" />
-    <Content Include="Textures\Dirt.png" />
-    <Content Include="Textures\Sand.png" />
-    <Content Include="Textures\Rock.png" />
+    <Content Include="Game\Textures\Grass.png" />
+    <Content Include="Game\Textures\GrassRock.png" />
+    <Content Include="Game\Textures\Dirt.png" />
+    <Content Include="Game\Textures\Sand.png" />
+    <Content Include="Game\Textures\Rock.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\Physic\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\GameObjects\Wall\object.blend" />
+    <None Include="Game\GameObjects\Wall\object.mtl" />
+    <None Include="Game\GameObjects\Wall\object.obj" />
+    <None Include="Game\GameObjects\Tree\object.blend" />
+    <None Include="Game\GameObjects\Tree\object.mtl" />
+    <None Include="Game\GameObjects\Tree\object.obj" />
     <None Include="Game\GameObjects\Water\object.blend" />
     <None Include="Game\GameObjects\Water\object.mtl" />
     <None Include="Game\GameObjects\Water\object.obj" />

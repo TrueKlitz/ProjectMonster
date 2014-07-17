@@ -57,7 +57,7 @@ namespace MonsterEngine.Engine
             game = new Game.Game(this);
             game.Load();
 
-            Console.Write("\n"+GL.GetString(StringName.Version));
+            Console.WriteLine(GL.GetString(StringName.Version));
 
             GLEnable();
 
@@ -97,7 +97,7 @@ namespace MonsterEngine.Engine
         {
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
-            
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
 
         public void resize()

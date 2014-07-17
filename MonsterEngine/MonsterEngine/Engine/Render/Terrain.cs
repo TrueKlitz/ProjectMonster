@@ -32,11 +32,11 @@ namespace MonsterEngine.Engine.Render
             faNormalMap = _NormalMap;
             terrainSize = faHeightMap.GetLength(0);
 
-            tGrass = Texture.LoadTexture(".../.../Textures/Grass.png");
-            tRock = Texture.LoadTexture(".../.../Textures/Rock.png");
-            tSand = Texture.LoadTexture(".../.../Textures/Sand.png");
-            tGrassRock = Texture.LoadTexture(".../.../Textures/GrassRock.png");
-            tDirt = Texture.LoadTexture(".../.../Textures/Dirt.png");
+            tGrass = Texture.LoadTexture(".../.../Game/Textures/Grass.png");
+            tRock = Texture.LoadTexture(".../.../Game/Textures/Rock.png");
+            tSand = Texture.LoadTexture(".../.../Game/Textures/Sand.png");
+            tGrassRock = Texture.LoadTexture(".../.../Game/Textures/GrassRock.png");
+            tDirt = Texture.LoadTexture(".../.../Game/Textures/Dirt.png");
 
             PositionX = _PositionX;
             PositionY = _PositionY;
@@ -54,7 +54,7 @@ namespace MonsterEngine.Engine.Render
             texCoord = new Vector2[terrainSize * terrainSize];
             normals = new Vector3[terrainSize * terrainSize];
 
-            float MapGenSize = 6;
+            float MapGenSize = 4;
             Random rnd = new Random();
             for (int x = 0; x < terrainSize; x++)
             {
@@ -62,7 +62,7 @@ namespace MonsterEngine.Engine.Render
                 {
                     vertices[x * terrainSize + z] = new Vector3(x / MapGenSize + PositionX, faHeightMap[x + 1, z + 1], z / MapGenSize + PositionY);
 
-                    texCoord[x * terrainSize + z] = new Vector2(x / 13f, z / 13f);
+                    texCoord[x * terrainSize + z] = new Vector2(x / 5f, z / 5f);
 
                     //texCoord[x * iMapSize + z].Scale(new Vector2(1.6f,1.6f));
 

@@ -170,28 +170,28 @@ namespace MonsterEngine.Engine
             GL.BindBuffer(BufferTarget.ArrayBuffer, iTanBO);
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(tangent.Length * Vector3.SizeInBytes),
-                                   tangent, BufferUsageHint.StaticDraw);
+                                   tangent, BufferUsageHint.DynamicDraw);
 
             //Generate TexCoordinates
             GL.GenBuffers(1, out iTBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iTBO);
             GL.BufferData<Vector2>(BufferTarget.ArrayBuffer,
                                    new IntPtr(texCoord.Length * Vector2.SizeInBytes),
-                                   texCoord, BufferUsageHint.StaticDraw);
+                                   texCoord, BufferUsageHint.DynamicDraw);
 
             //Generate Normals
             GL.GenBuffers(1, out iNBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iNBO);
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(normals.Length * Vector3.SizeInBytes),
-                                   normals, BufferUsageHint.StaticDraw);
+                                   normals, BufferUsageHint.DynamicDraw);
 
             //Generate Vertices
             GL.GenBuffers(1, out iVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, iVBO);
             GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
                                    new IntPtr(vertices.Length * Vector3.SizeInBytes),
-                                   vertices, BufferUsageHint.StaticDraw);
+                                   vertices, BufferUsageHint.DynamicDraw);
 
         }      
         

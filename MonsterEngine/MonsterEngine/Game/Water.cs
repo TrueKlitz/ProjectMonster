@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using MonsterEngine.Engine;
 
 namespace MonsterEngine.Game
 {
@@ -12,14 +13,14 @@ namespace MonsterEngine.Game
         private GameObject obj;
         public Water(Vector3 _Pos){
             obj = new GameObject(_Pos, ref Game.modelWater);
-            obj.scale = 21f;
+            obj.scale = 31.45f;
+            obj.drawDistance = 100.0f;
         }
         private float rotation = 0;
         public void Update()
         {
             rotation += 0.01f;
             obj.position.Y = 1.0f + (float)((1.0f + Math.Cos(rotation)) / 2.0f) / 3.0f;
-            obj.Update();
         }
         public void Draw()
         {
