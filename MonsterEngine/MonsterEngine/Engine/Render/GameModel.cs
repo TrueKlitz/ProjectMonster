@@ -8,9 +8,8 @@ using OpenTK;
 using OpenTK.Platform;
 using System.Globalization;
 using System.Diagnostics;
-using MonsterEngine.Engine.Render;
 
-namespace MonsterEngine.Engine
+namespace MonsterEngine.Engine.Render
 {
     class GameModel
     {
@@ -22,7 +21,7 @@ namespace MonsterEngine.Engine
         private Vector2[] texCoord;
         private Vector3[] tangent;
 
-        private int tGroundTexture, tNormal;
+        private int tGroundTexture, tNormal, tHeight;
 
         private int iVBO, iTBO, iNBO, iTanBO;
         private int vertex_count = 0;
@@ -31,6 +30,9 @@ namespace MonsterEngine.Engine
         private int normal_count = 0;
         private int uniformModelViewMatrixPointer = 0;
 
+        public bool normalMapping, parallaxMapping;
+        public float specluar;
+
         public GameModel(String _fileLocation)
         {
             Stopwatch sw = new Stopwatch();
@@ -38,11 +40,17 @@ namespace MonsterEngine.Engine
             fileLocation = ".../.../Game/GameObjects/" + _fileLocation + "/object.obj";
             tGroundTexture = Texture.LoadTexture(".../.../Game/GameObjects/"+_fileLocation+"/texture.png");
             tNormal = Texture.LoadTexture(".../.../Game/GameObjects/" + _fileLocation + "/normal.png");
+            tHeight = Texture.LoadTexture(".../.../Game/GameObjects/" + _fileLocation + "/height.png");
             LoadFile();
             LoadBuffers();
             uniformModelViewMatrixPointer = GL.GetUniformLocation(Core.game.shader.S2_shaderProgramHandle, "modelview_matrix");
+
+            normalMapping = true;
+            parallaxMapping = true;
+            specluar = 10f;
+
             sw.Stop();
-            Console.WriteLine("Object has being loaded " + fileLocation + " in " + sw.ElapsedMilliseconds + "ms");
+            Console.WriteLine("Object has being loaded " + fileLocation + " in " + sw.ElapsedMilliseconds + "ms");   
         }
         
         private void LoadFile()
@@ -220,7 +228,7 @@ namespace MonsterEngine.Engine
         {
             GL.UseProgram(Core.game.shader.S2_shaderProgramHandle);
             BindBuffers();
-            Core.game.shader.SetAttributesShaderTwo(tGroundTexture, tNormal);
+            Core.game.shader.SetAttributesShaderTwo(tGroundTexture, tNormal, tHeight, normalMapping, parallaxMapping, specluar);
         }
 
         public void SetModelViewMatrix(Matrix4 mPosScaleRot)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
-using MonsterEngine.Engine;
+using MonsterEngine.Engine.Render;
 
 namespace MonsterEngine.Engine
 {

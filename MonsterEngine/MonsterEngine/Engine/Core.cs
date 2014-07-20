@@ -96,7 +96,7 @@ namespace MonsterEngine.Engine
         private void GLEnable()
         {
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
+            //GL.Enable(EnableCap.CullFace);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
 

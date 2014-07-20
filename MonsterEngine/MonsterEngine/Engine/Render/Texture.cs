@@ -2,6 +2,7 @@
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.IO;
 
 namespace MonsterEngine.Engine.Render
 {
@@ -14,8 +15,8 @@ namespace MonsterEngine.Engine.Render
 
         public static int LoadTexture(string filename)
         {
-            if (String.IsNullOrEmpty(filename))
-                throw new ArgumentException(filename);
+            if ( String.IsNullOrEmpty(filename) | !File.Exists(filename))
+                filename = ".../.../Engine/Render/standartTexture.png";
 
             int id = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, id);

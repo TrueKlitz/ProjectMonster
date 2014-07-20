@@ -65,13 +65,12 @@
   <ItemGroup>
     <Compile Include="Engine\Core.cs" />
     <Compile Include="Engine\Helper.cs" />
-    <Compile Include="Engine\GameModel.cs" />
+    <Compile Include="Engine\Render\GameModel.cs" />
     <Compile Include="Engine\Render\Shaders.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Game\Input.cs" />
     <Compile Include="Engine\Render\Terrain.cs" />
     <Compile Include="Game\Game.cs" />
-    <Compile Include="Game\Wall.cs" />
     <Compile Include="Game\Tree.cs" />
     <Compile Include="Game\Level.cs" />
     <Compile Include="Engine\Render\Noise.cs" />
@@ -105,15 +104,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Engine\Render\standartTexture.png" />
     <Content Include="Game\config.txt" />
-    <Content Include="Game\GameObjects\Wall\normal.png" />
-    <Content Include="Game\GameObjects\Wall\texture.png" />
-    <Content Include="Game\GameObjects\Tree\normal.png" />
-    <Content Include="Game\GameObjects\Tree\texture.png" />
-    <Content Include="Game\GameObjects\Tank\Kopie von normal.png" />
+    <Content Include="Game\GameObjects\Tank\height.png" />
+    <Content Include="Game\GameObjects\Tank\normal.png" />
     <Content Include="Game\GameObjects\Water\normal.png" />
     <Content Include="Game\GameObjects\Water\texture.png" />
-    <Content Include="Game\GameObjects\Tank\normal.png" />
     <Content Include="Game\GameObjects\Tank\texture.png" />
     <Content Include="Game\Textures\Grass.png" />
     <Content Include="Game\Textures\GrassRock.png" />
@@ -125,17 +121,13 @@
     <Folder Include="Engine\Physic\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Game\GameObjects\Wall\object.blend" />
-    <None Include="Game\GameObjects\Wall\object.mtl" />
-    <None Include="Game\GameObjects\Wall\object.obj" />
-    <None Include="Game\GameObjects\Tree\object.blend" />
-    <None Include="Game\GameObjects\Tree\object.mtl" />
-    <None Include="Game\GameObjects\Tree\object.obj" />
+    <None Include="Engine\Shaders\terrain.fsh" />
+    <None Include="Engine\Shaders\terrain.vsh" />
+    <None Include="Engine\Shaders\lightning.fsh" />
+    <None Include="Engine\Shaders\lightning.vsh" />
     <None Include="Game\GameObjects\Water\object.blend" />
-    <None Include="Game\GameObjects\Water\object.mtl" />
     <None Include="Game\GameObjects\Water\object.obj" />
     <None Include="Game\GameObjects\Tank\object.blend" />
-    <None Include="Game\GameObjects\Tank\object.mtl" />
     <None Include="Game\GameObjects\Tank\object.obj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
