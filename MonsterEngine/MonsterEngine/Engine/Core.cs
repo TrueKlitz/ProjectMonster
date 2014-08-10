@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Drawing;
 using OpenTK;
 using OpenTK.Platform;
@@ -45,14 +45,14 @@ namespace MonsterEngine.Engine
            
             //setup settings, load textures, sounds
             gameWindow = game_;
-            if(VSYNC)gameWindow.VSync = VSyncMode.On;
+            if(VSYNC)gameWindow.VSync = VSyncMode.Off;
             gameWindow.Title = NAME;
             gameWindow.Width = WIDTH;
             gameWindow.Height = HEIGHT;
             gameWindow.X = 1921;
             gameWindow.Y = 0;
             gameWindow.CursorVisible = false;
-            if(FULLSCREEN) gameWindow.WindowState = WindowState.Fullscreen;
+            if (FULLSCREEN) gameWindow.WindowState = WindowState.Fullscreen;
 
             game = new Game.Game(this);
             game.Load();
@@ -65,22 +65,23 @@ namespace MonsterEngine.Engine
   
         public void update()
         {
-            dDeltaTime = 1000.0 / gameWindow.RenderFrequency;
+            dDeltaTime = 1.0f / 60.0f;
 
-            fConsoleUpdate += (float)dDeltaTime;
+            fConsoleUpdate += 1.0f/60.0f;
 
             game.Update();
 
-            if (fConsoleUpdate > 1000)
+            if (fConsoleUpdate > 1.0f)
             {
                 //Console.Write("\n Deltatime: " + dDeltaTime + " Playerspeed: " + game.camera.vMove + " Playerposition: " + game.camera.vPosition + "TEST: " + gameWindow.RenderFrequency);
                 float cameraTime = game.camera.sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
-                float terrainTime = game.terrain.sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
                 float gameUpdateTime = game.swUpdate.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
                 float gameDrawTime = game.swDraw.ElapsedTicks / (TimeSpan.TicksPerMillisecond * 1.0f);
-                Console.WriteLine("Time spend: Camera["+cameraTime+"ms] Terrain["+terrainTime+"ms] Update["+gameUpdateTime+"ms] Draw["+gameDrawTime+"]" );
+                Console.WriteLine("Time spend: Camera["+cameraTime+"ms]  Update["+gameUpdateTime+"ms] Draw["+gameDrawTime+"]" );
                 fConsoleUpdate = 0;
-            }    
+                gameWindow.Title = NAME + " FPS: " + (1.0f / gameWindow.RenderTime);
+            }
+            
         }
  
         public void draw()
@@ -88,6 +89,7 @@ namespace MonsterEngine.Engine
             GL.ClearColor(Color4.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
+
             game.Draw();
 
             gameWindow.SwapBuffers();
@@ -96,7 +98,8 @@ namespace MonsterEngine.Engine
         private void GLEnable()
         {
             GL.Enable(EnableCap.DepthTest);
-            //GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.CullFace);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
         }
 

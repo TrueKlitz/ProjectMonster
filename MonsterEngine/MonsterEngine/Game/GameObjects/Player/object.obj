@@ -1,6 +1,6 @@
 # Blender v2.71 (sub 0) OBJ File: 'object.blend'
 # www.blender.org
-o Plane_Plane.001
+o Plane
 v -1.000000 0.000000 1.000000
 v 1.000000 0.000000 1.000000
 v -1.000000 0.000000 -1.000000

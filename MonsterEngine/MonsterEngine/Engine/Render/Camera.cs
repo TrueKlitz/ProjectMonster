@@ -24,8 +24,8 @@ namespace MonsterEngine.Engine.Render
         public Camera(Core _core, Matrix4 _mCamera, Matrix4 _mProjection)
         {
             core = _core;
-            fMovementSpeed = 0.004f;
-            vPosition = new Vector3(-8.0f,-10.0f,-8.0f);
+            fMovementSpeed = 10f;
+            vPosition = new Vector3(0.0f,-10.0f,0.0f);
             mCamera = _mCamera;
             mProjection = _mProjection;
             fPitch = 100f;
@@ -59,7 +59,7 @@ namespace MonsterEngine.Engine.Render
 
         public void SetShaderCPosition()
         {
-            Vector3 normalizedPos = new Vector3(-vPosition.X, vPosition.Y, -vPosition.Z);
+            Vector3 normalizedPos = new Vector3(-vPosition.Z, vPosition.Y, vPosition.X);
             GL.Uniform3(GL.GetUniformLocation(Core.game.shader.S2_shaderProgramHandle, "c_eyePos"), normalizedPos);
         }
 

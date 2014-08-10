@@ -13,7 +13,7 @@ namespace MonsterEngine.Engine
         public Vector3 position, rotation;
         public float scale;
         public float drawDistance = 10.0f;
-        private GameModel gameModel;
+        public GameModel gameModel;
 
         public GameObject(Vector3 _Pos,ref GameModel _Model){
             gameModel = _Model;

@@ -21,8 +21,8 @@ namespace MonsterEngine.Engine.Render
 
         public Shaders()
         {
-            directionalLightColor = new Vector3(1f,1f,1f);
-            directionalLight = Vector3.Normalize(new Vector3(0.3f, 0.45f, 0.3f));
+            directionalLightColor = new Vector3(0.3f, 0.3f, 0.3f);
+            directionalLight = Vector3.Normalize(new Vector3(0.2f, 0.5f, 0.45f));
             ambient = new Vector3(0.1f, 0.1f, 0.1f);
             gamma = new Vector3( 0.9f, 0.9f, 0.9f);
             LoadShaderOne();
@@ -118,14 +118,12 @@ namespace MonsterEngine.Engine.Render
             GL.BindAttribLocation(S2_shaderProgramHandle, 3, "vertex_tangent");
         }
 
-        public void SetAttributesShaderTwo(int tGround, int tNormal,int tHeight, bool normalMapping, bool parallaxMapping, float specluar)
+        public void SetAttributesShaderTwo(int tGround, int tNormal, bool normalMapping, float specluar)
         {
             Texture.BindTexture(ref tGround, TextureUnit.Texture0, "texGround", S2_shaderProgramHandle);
             Texture.BindTexture(ref tNormal, TextureUnit.Texture1, "texNormal", S2_shaderProgramHandle);
-            Texture.BindTexture(ref tHeight, TextureUnit.Texture2, "texHeight", S2_shaderProgramHandle);
             GL.UseProgram(S2_shaderProgramHandle);
             GL.Uniform1(GL.GetUniformLocation(S2_shaderProgramHandle, "normalMapping"), normalMapping ? 1 : 0);
-            GL.Uniform1(GL.GetUniformLocation(S2_shaderProgramHandle, "parallaxMapping"), parallaxMapping ? 1 : 0);
             GL.Uniform1(GL.GetUniformLocation(S2_shaderProgramHandle, "specluar"), specluar);
         }
     }

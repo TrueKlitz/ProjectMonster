@@ -57,14 +57,6 @@ namespace MonsterEngine.Game
             {
                 camera.vMove.Y = camera.fMovementSpeed;
             }
-            if (kbState_new.IsKeyDown(Key.K))
-            {
-                Game.modelTank.parallaxMapping = false;
-            }
-            if (kbState_new.IsKeyDown(Key.L))
-            {
-                Game.modelTank.parallaxMapping = true;
-            }
             if (kbState_new.IsKeyDown(Key.Escape))
                 core.gameWindow.Exit();
 

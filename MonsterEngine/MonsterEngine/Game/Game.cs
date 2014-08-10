@@ -15,18 +15,21 @@ namespace MonsterEngine.Game
 {
     class Game
     {
-        private Level level;
         private Core core;
         private Input input;
         public Camera camera;
         public Shaders shader;
-        public Terrain terrain;
 
         public Stopwatch swUpdate = new Stopwatch(),swDraw = new Stopwatch();
-        public static GameModel modelTank, modelWater;
+        
+        public static GameModel modelWall, modelGround;
 
-        public static Tank tank;
-        public static Water water;
+        Wall[] wallTile;
+        Ground[] groundTile;
+
+        private int iMapsize = 16;
+
+        private int[] iaMap;
 
         public Game(Core _core)
         {
@@ -34,20 +37,76 @@ namespace MonsterEngine.Game
             shader = new Shaders();
             camera = new Camera(_core, Matrix4.CreateTranslation(10f, 0f, -5f), Matrix4.CreatePerspectiveFieldOfView(0.75f, _core.gameWindow.Width / (_core.gameWindow.Height * 1.0f), 0.01f, 500f)); ;
             input = new Input(core);
-            level = new Level(256, "lol");
         }
 
         public void Load()
         {
-            modelTank = new GameModel("Tank");
-            modelWater = new GameModel("Water");
+            iaMap = new int[iMapsize*iMapsize];
 
-            level.Load();
-            terrain = new Terrain(level.faHeightmap , level.faHeightMapNormalGen, 0.0f,0.0f);
-            level.disposeData();
-            
-            tank = new Tank(new Vector3(2,2,11));
-            water = new Water(new Vector3(31.65f,1.1f,31.65f));
+            modelWall = new GameModel("WallCobble");
+            modelGround = new GameModel("Ground");
+            modelGround.specluar = 0f;
+            modelWall.specluar = 0f;
+
+            LoadMap();
+        }
+
+        private void LoadMap()
+        {
+            Random rnd = new Random();
+            for (int x = 0; x < iMapsize; x++)
+            {
+                for (int y = 0; y < iMapsize; y++)
+                {
+                    if (x == 0 | y == 0 | x == iMapsize - 1 | y == iMapsize - 1)
+                    {
+                        iaMap[x * iMapsize + y] = 2;
+                    }
+                    else
+                    {
+                        iaMap[x * iMapsize + y] = 1;
+                    }
+                }
+            }
+
+            int groundNum = 0;
+            int wallNum = 0;
+
+            for (int i = 0; i < iaMap.Length; i++)
+            {
+                switch (iaMap[i])
+                {
+                    case 1:
+                        groundNum++;
+                        break;
+                    case 2:
+                        wallNum++;
+                        break;
+                }
+            }
+
+            groundTile = new Ground[groundNum];
+            wallTile = new Wall[wallNum];
+
+            groundNum = 0;
+            wallNum = 0;
+            for (int x = 0; x < iMapsize; x++)
+            {
+                for (int y= 0; y < iMapsize; y++)
+                {
+                    if (iaMap[x * iMapsize + y] == 1)
+                    {
+                        groundTile[groundNum] = new Ground(new Vector3(x*2,-1,y*2));
+                        groundNum++;
+                    }
+                    if (iaMap[x * iMapsize + y] == 2)
+                    {
+                        wallTile[wallNum] = new Wall(new Vector3(x * 2, 0, y * 2));
+                        wallNum++;
+                    }
+                }
+            }
+
         }
 
         public void Update()
@@ -57,8 +116,6 @@ namespace MonsterEngine.Game
             {
                 input.inputUpdate(camera);
                 camera.update();
-                tank.Update();
-                water.Update();
             }
             swUpdate.Stop();
         }
@@ -68,11 +125,17 @@ namespace MonsterEngine.Game
             swDraw.Restart();
             if (core.gameWindow.Focused)
             {
-                modelTank.BindDraw();
-                tank.Draw();
-                terrain.Draw();
-                modelWater.BindDraw();
-                water.Draw();
+
+                modelGround.BindDraw();
+                for (int i = 0; i < groundTile.Length; i++)
+                {
+                    groundTile[i].Draw();
+                }
+                modelWall.BindDraw();
+                for (int i = 0; i < wallTile.Length; i++)
+                {
+                    wallTile[i].Draw();
+                }
             }
             swDraw.Stop();
         }

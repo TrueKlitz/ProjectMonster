@@ -13,7 +13,8 @@ out vec3 worldPos0;
 
 void main(void)
 { 
-	worldPos0 = (modelview_matrix * vec4(vertex_position.xyz , 1.0 )).xyz;
+	gl_Position = projection_matrix * camera_matrix * modelview_matrix * vec4(vertex_position.xyz , 1.0 );           
+	worldPos0 = gl_Position;
 	vec3 n = normalize((modelview_matrix * vec4(vertex_normal , 0.0 )).xyz);
 	vec3 t = normalize((modelview_matrix * vec4(vertex_tangent , 0.0 )).xyz);
 	t = normalize(t - dot(t, n) * n);
@@ -23,5 +24,5 @@ void main(void)
 	tbnMatrix = mat3(t, biTangent, n);
 	texCoord0 = vertex_texCoord0;
 
-	gl_Position = projection_matrix * camera_matrix * modelview_matrix * vec4(vertex_position.xyz , 1.0 );           
+	
 }

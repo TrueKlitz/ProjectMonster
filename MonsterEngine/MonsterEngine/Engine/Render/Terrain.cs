@@ -32,11 +32,11 @@ namespace MonsterEngine.Engine.Render
             faNormalMap = _NormalMap;
             terrainSize = faHeightMap.GetLength(0);
 
-            tGrass = Texture.LoadTexture(".../.../Game/Textures/Grass.png");
-            tRock = Texture.LoadTexture(".../.../Game/Textures/Rock.png");
-            tSand = Texture.LoadTexture(".../.../Game/Textures/Sand.png");
-            tGrassRock = Texture.LoadTexture(".../.../Game/Textures/GrassRock.png");
-            tDirt = Texture.LoadTexture(".../.../Game/Textures/Dirt.png");
+            tGrass = Texture.LoadTextureFromFile(".../.../Game/Textures/Grass.png");
+            tRock = Texture.LoadTextureFromFile(".../.../Game/Textures/Rock.png");
+            tSand = Texture.LoadTextureFromFile(".../.../Game/Textures/Sand.png");
+            tGrassRock = Texture.LoadTextureFromFile(".../.../Game/Textures/GrassRock.png");
+            tDirt = Texture.LoadTextureFromFile(".../.../Game/Textures/Dirt.png");
 
             PositionX = _PositionX;
             PositionY = _PositionY;
