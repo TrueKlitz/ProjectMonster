@@ -31,6 +31,9 @@ namespace MonsterEngine.Game
             kbState_new = Keyboard.GetState();
             msState = Mouse.GetState();
 
+            if (kbState_new.IsKeyDown(Key.ShiftLeft)) camera.fMovementSpeed = 100.0f;
+            else camera.fMovementSpeed = 10.0f;
+
             if (kbState_new.IsKeyDown(Key.W))
                 camera.vMove = new Vector3((float)Math.Sin(Helper.degToRad(camera.fPitch)) * -camera.fMovementSpeed, 0.0f, (float)Math.Cos(Helper.degToRad(camera.fPitch)) * camera.fMovementSpeed);
             if (kbState_new.IsKeyDown(Key.S))

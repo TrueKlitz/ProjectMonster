@@ -16,7 +16,7 @@ namespace MonsterEngine.Engine.Render
          * Shader 1 (S1) is being used for Terrain
          * Shader 2 (S2) is being used for Game Objects
         */
-
+        private static int tGrass, tRock, tSand, tGrassRock, tDirt;
         public Vector3 directionalLight, ambient, directionalLightColor, gamma;
 
         public Shaders()
@@ -74,6 +74,14 @@ namespace MonsterEngine.Engine.Render
             GL.BindAttribLocation(S1_shaderProgramHandle, 0, "vertex_position");
             GL.BindAttribLocation(S1_shaderProgramHandle, 1, "vertex_normal");
             GL.BindAttribLocation(S1_shaderProgramHandle, 2, "vertex_texCoord");
+
+
+            tGrass = Texture.LoadTextureFromFile(".../.../Game/Textures/Grass.png");
+            tRock = Texture.LoadTextureFromFile(".../.../Game/Textures/Rock.png");
+            tSand = Texture.LoadTextureFromFile(".../.../Game/Textures/Sand.png");
+            tGrassRock = Texture.LoadTextureFromFile(".../.../Game/Textures/GrassRock.png");
+            tDirt = Texture.LoadTextureFromFile(".../.../Game/Textures/Dirt.png");
+            SetAttributesShaderOne(tGrass, tRock, tSand, tGrassRock, tDirt);  
         }
 
         public void SetAttributesShaderOne(int tGrass, int tRock,int tSand,int tGrassRock, int tDirt)
@@ -83,6 +91,7 @@ namespace MonsterEngine.Engine.Render
             Texture.BindTexture(ref tSand, TextureUnit.Texture2, "texSand", S1_shaderProgramHandle);
             Texture.BindTexture(ref tGrassRock, TextureUnit.Texture3, "texGrassRock", S1_shaderProgramHandle);
             Texture.BindTexture(ref tDirt, TextureUnit.Texture4, "texDirt", S1_shaderProgramHandle);
+            GL.Uniform1(GL.GetUniformLocation(S1_shaderProgramHandle, "scale"), 0.5f);
         }
 
         private void LoadShaderTwo()

@@ -7,11 +7,11 @@ using MonsterEngine.Engine;
 
 namespace MonsterEngine.Game
 {
-    class Wall
+    /*class Wall
     {
         private GameObject obj;
         public Wall(Vector3 _Pos){
-            obj = new GameObject(_Pos, ref Game.modelWall);
+           // obj = new GameObject(_Pos,ref Game.modelWall);
             obj.scale = 1f;
             obj.drawDistance = 50;
             obj.gameModel.specluar = 0f;
@@ -25,5 +25,5 @@ namespace MonsterEngine.Game
         {
             obj.Draw();
         }
-    }
+    }*/
 }

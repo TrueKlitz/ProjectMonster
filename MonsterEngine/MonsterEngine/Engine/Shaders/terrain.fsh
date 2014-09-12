@@ -5,6 +5,7 @@ uniform sampler2D texRock;
 uniform sampler2D texSand;
 uniform sampler2D texGrassRock;
 uniform sampler2D texDirt;
+uniform float scale;
 uniform vec3 ambient;
 uniform vec3 directionalLight;
 uniform vec3 directionalLightColor;  
@@ -19,7 +20,8 @@ out vec4 out_frag_color;
 void main(void)
 {
 	vec4 texture = vec4(1,1,1,1);
-	if(height >= 0.00f && height <= 1.0f){ texture = texture2D(texSand, TexCoord0.xy);}
+	float height = height*scale;
+	if(height <= 1.0f){ texture = texture2D(texSand, TexCoord0.xy);}
 	if(height >= 1.0f && height <= 1.25f){
 		float lHeight = (height - 1.0f) * 4.0f;
 		texture = ( ( texture2D(texGrass, TexCoord0.xy) * lHeight ) + ( texture2D(texSand, TexCoord0.xy) * (1.0f-lHeight) ) );

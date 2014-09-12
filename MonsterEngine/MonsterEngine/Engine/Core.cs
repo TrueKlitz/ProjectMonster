@@ -23,6 +23,7 @@ namespace MonsterEngine.Engine
         public int WIDTH, HEIGHT, MSAA;
         public bool FULLSCREEN, VSYNC;
         public String NAME;
+        public static float drawDistance = 10.0f;
 
         public Core()
         {
@@ -42,10 +43,9 @@ namespace MonsterEngine.Engine
     
         public void load(GameWindow game_)
         {
-           
             //setup settings, load textures, sounds
             gameWindow = game_;
-            if(VSYNC)gameWindow.VSync = VSyncMode.Off;
+            if(VSYNC)gameWindow.VSync = VSyncMode.On;
             gameWindow.Title = NAME;
             gameWindow.Width = WIDTH;
             gameWindow.Height = HEIGHT;
@@ -60,7 +60,6 @@ namespace MonsterEngine.Engine
             Console.WriteLine(GL.GetString(StringName.Version));
 
             GLEnable();
-
         }
   
         public void update()
